@@ -135,7 +135,13 @@
                             </td>
                             <td class="text-end fw-bold">{{ t.total_price|intcomma }} ฿</td>
                             <td class="text-center">
-                                <a href="{% url 'edit_transaction' t.id %}" class="btn btn-sm btn-outline-primary">✏️ แก้ไข</a>
+                                <div class="d-flex justify-content-center gap-2">
+                                    <a href="{% url 'edit_transaction' t.id %}" class="btn btn-sm btn-outline-primary">✏️ แก้ไข</a>
+                                    <form method="POST" action="{% url 'delete_transaction' t.id %}" onsubmit="return confirm('🚨 ยืนยันการลบรายการ: {{ t.title }}? ยอดรวมรายเดือนจะถูกคำนวณใหม่ทันที');" class="d-inline">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-sm btn-outline-danger">🗑️ ลบ</button>
+                                    </form>
+                                </div>
                             </td>
                         </tr>
                         {% endfor %}

@@ -136,6 +136,13 @@ def edit_transaction(request, transaction_id):
     return render(request, 'finance/transaction_form.html', context)
 
 @login_required
+def delete_transaction(request, transaction_id):
+    transaction = get_object_or_404(Transaction, id=transaction_id)
+    if request.method == 'POST':
+        transaction.delete()
+    return redirect('dashboard')
+
+@login_required
 def export_csv(request):
     filter_month = request.GET.get('filter_month', 'all')
     category = request.GET.get('category', 'all')
