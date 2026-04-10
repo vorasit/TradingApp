@@ -107,8 +107,11 @@ def add_transaction(request):
             )
             return redirect('dashboard')
             
-    # Default GET request, render form
-    return render(request, 'finance/transaction_form.html')
+    default_date = request.GET.get('default_date', '')
+    context = {
+        'default_date': default_date
+    }
+    return render(request, 'finance/transaction_form.html', context)
 
 @login_required
 def edit_transaction(request, transaction_id):

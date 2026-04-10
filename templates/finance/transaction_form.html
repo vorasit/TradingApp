@@ -54,9 +54,13 @@
     </div>
 </div>
 <script>
-    // ตั้งค่าหน้าวันเริ่มต้นเป็นวันปัจจุบัน (กรณีเพิ่มใบใหม่)
+    // ตั้งค่าหน้าวันเริ่มต้น
     {% if not transaction %}
-    document.getElementById('tDate').valueAsDate = new Date();
+        {% if default_date %}
+            document.getElementById('tDate').value = "{{ default_date }}";
+        {% else %}
+            document.getElementById('tDate').valueAsDate = new Date();
+        {% endif %}
     {% endif %}
 </script>
 {% endblock %}

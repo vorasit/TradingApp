@@ -78,6 +78,10 @@
                     </div>
                 </div>
             </div>
+            <div class="card-footer bg-transparent border-top-0 d-flex gap-2">
+                <a href="{% url 'dashboard' %}?filter_month={{ summary.period|date:'Y-m' }}" class="btn btn-sm btn-outline-primary w-100">🔍 ดูประวัติตามเดือนนี้</a>
+                <a href="{% url 'add_transaction' %}?default_date={{ summary.period|date:'Y-m-01' }}" class="btn btn-sm btn-primary w-100">➕ เพิ่มยอดของเดือนนี้</a>
+            </div>
         </div>
     </div>
     {% empty %}
