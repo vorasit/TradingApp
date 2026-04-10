@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="th" data-bs-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trading System Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --my-bg: #f8fafc;
+            --my-text: #1e293b;
+            --my-card-bg: #ffffff;
+            --my-card-border: #f1f5f9;
+            --my-th-bg: #f1f5f9;
+            --my-th-text: #475569;
+        }
+
+        :root[data-bs-theme="dark"] {
+            --my-bg: #0f172a;
+            --my-text: #f8fafc;
+            --my-card-bg: #1e293b;
+            --my-card-border: #334155;
+            --my-th-bg: #334155;
+            --my-th-text: #cbd5e1;
+        }
+
+        body { font-family: 'Prompt', sans-serif; background-color: var(--my-bg); color: var(--my-text); transition: background-color 0.3s ease, color 0.3s ease; }
+        .navbar { background: linear-gradient(135deg, #1e293b, #0f172a); }
+        .navbar-brand { font-weight: 600; color: #f8fafc; }
+        .card { background-color: var(--my-card-bg); border: none; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 20px; transition: background-color 0.3s ease; }
+        .card-header { background-color: var(--my-card-bg); border-bottom: 1px solid var(--my-card-border); border-radius: 12px 12px 0 0 !important; font-weight: 600; font-size: 1.1rem; transition: background-color 0.3s ease; }
+        .table { color: var(--my-text) !important; }
+        .table th { background-color: var(--my-th-bg) !important; color: var(--my-th-text) !important; font-weight: 500; border-bottom-color: var(--my-card-border); }
+        .table td { border-bottom-color: var(--my-card-border); }
+        .text-income { color: #10b981; }
+        .text-expense { color: #ef4444; }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark mb-4">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'dashboard' %}">📊 Trading & Finance Master</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item me-2">
+                        <button id="themeToggleBtn" class="btn btn-outline-light rounded-circle p-0" style="width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; border-color: rgba(255,255,255,0.2);">🌙</button>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'dashboard' %}">หน้าหลัก (Dashboard)</a>
+                    </li>
+                    {% if user.is_authenticated %}
+                    <li class="nav-item d-flex align-items-center me-3">
+                        <span class="text-white-50 ms-2 text-nowrap">👤 {{ user.username }}</span>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-primary px-3 text-white me-2" href="{% url 'add_transaction' %}">+ เพิ่มรายการใหม่</a>
+                    </li>
+                    <li class="nav-item">
+                        <form method="post" action="{% url 'logout' %}" class="d-inline">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger px-3">🚪 ออกจากระบบ</button>
+                        </form>
+                    </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-outline-light px-3" href="{% url 'login' %}">เข้าสู่ระบบ</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // ควบคุมระบบ Dark Mode โดยให้โหลดตั้งแต่เริ่ม
+        const themeToggleBtn = document.getElementById('themeToggleBtn');
+        const savedTheme = localStorage.getItem('django_trading_theme') || 'light';
+        
+        function applyTheme(theme) {
+            document.documentElement.setAttribute('data-bs-theme', theme);
+            if (themeToggleBtn) {
+                themeToggleBtn.textContent = theme === 'dark' ? '☀️' : '🌙';
+            }
+        }
+        
+        // ใช้ค่าเดิมที่ประวัติบันทึกไว้ใน Browser
+        applyTheme(savedTheme);
+
+        if (themeToggleBtn) {
+            themeToggleBtn.addEventListener('click', () => {
+                const newTheme = document.documentElement.getAttribute('data-bs-theme') === 'dark' ? 'light' : 'dark';
+                localStorage.setItem('django_trading_theme', newTheme);
+                applyTheme(newTheme);
+            });
+        }
+    </script>
+</body>
+</html>

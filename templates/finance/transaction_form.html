@@ -1,0 +1,62 @@
+{% extends 'finance/base.html' %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                {% if transaction %}📝 แก้ไขข้อมูลรายการ{% else %}📝 เพิ่มรายการซื้อ-ขาย / บันทึกการเงินใหม่{% endif %}
+            </div>
+            <div class="card-body p-4">
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">ประเภทของรายการ</label>
+                        <select name="transaction_type" class="form-select" required>
+                            <option value="" disabled {% if not transaction %}selected{% endif %}>-- เลือกประเภท --</option>
+                            <option value="SELL" {% if transaction.transaction_type == 'SELL' %}selected{% endif %}>⬆️ ขายสินค้า (ส่งออก / รับรายได้)</option>
+                            <option value="BUY" {% if transaction.transaction_type == 'BUY' %}selected{% endif %}>⬇️ ซื้อสินค้า (นำเข้า / จ่ายเงิน)</option>
+                            <option value="INCOME" {% if transaction.transaction_type == 'INCOME' %}selected{% endif %}>💰 รายรับอื่นๆ (ค่าบริการ/ดอกเบี้ย/อื่นๆ)</option>
+                            <option value="EXPENSE" {% if transaction.transaction_type == 'EXPENSE' %}selected{% endif %}>💸 รายจ่ายอื่นๆ (ค่าน้ำ/ค่าไฟ/เงินเดือน/อื่นๆ)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">วันที่ของตั๋ว/บิล (วันที่ทำรายการ)</label>
+                        <input type="date" name="date" id="tDate" class="form-control" value="{{ transaction.date|date:'Y-m-d' }}" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">ชื่อรายการ / ชื่อสินค้า</label>
+                        <input type="text" name="title" class="form-control" placeholder="เช่น ขายคอมพิวเตอร์ให้ บจก. ทีคิวเอ็ม" value="{{ transaction.title }}" required>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">จำนวนเงิน (ระบบบังคับคำนวณ VAT ให้อัตโนมัติในภายหลังถ้าติ๊ก)</label>
+                        <div class="input-group">
+                            <input type="number" step="0.01" min="0" name="price" class="form-control" placeholder="0.00" value="{{ transaction.price }}" required>
+                            <span class="input-group-text">บาท (฿)</span>
+                        </div>
+                    </div>
+
+                    <div class="form-check form-switch mb-4 pb-3 border-bottom">
+                        <input class="form-check-input" type="checkbox" role="switch" name="has_vat" id="vatSwitch" style="transform: scale(1.3); margin-right: 10px;" {% if transaction.has_vat %}checked{% endif %}>
+                        <label class="form-check-label" for="vatSwitch" style="padding-left: 5px;">
+                            <strong class="text-primary">รายการนี้ชาร์จภาษีมูลค่าเพิ่ม (VAT 7%)</strong> <br>
+                            <small class="text-muted">ติ๊กเปิดเพื่อให้ระบบคำนวณบวก VAT 7% เพิ่มเข้าไปจากยอดเงินที่กรอก (เพื่อทำบัญชีภาษี)</small>
+                        </label>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100 py-2 fs-5">บันทึกข้อมูลเข้าสู่ระบบ</button>
+                    <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary w-100 mt-2">ยกเลิก กลับไปหน้าหลัก</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    // ตั้งค่าหน้าวันเริ่มต้นเป็นวันปัจจุบัน (กรณีเพิ่มใบใหม่)
+    {% if not transaction %}
+    document.getElementById('tDate').valueAsDate = new Date();
+    {% endif %}
+</script>
+{% endblock %}

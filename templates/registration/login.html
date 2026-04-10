@@ -1,0 +1,39 @@
+{% extends 'finance/base.html' %}
+{% block content %}
+<div class="row justify-content-center align-items-center" style="min-height: 70vh;">
+    <div class="col-md-5">
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-white text-center py-4 border-0">
+                <h3 class="mb-0 fw-bold">เข้าสู่ระบบ (Login)</h3>
+            </div>
+            <div class="card-body p-4">
+                {% if form.errors %}
+                <div class="alert alert-danger text-center">
+                    ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง
+                </div>
+                {% endif %}
+
+                {% if next %}
+                <div class="alert alert-info text-center">
+                    กรุณาเข้าสู่ระบบก่อนเข้าใช้งานหน้านี้
+                </div>
+                {% endif %}
+
+                <form method="post" action="{% url 'login' %}">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">ชื่อผู้ใช้งาน (Username)</label>
+                        <input type="text" name="username" class="form-control form-control-lg" required autofocus>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">รหัสผ่าน (Password)</label>
+                        <input type="password" name="password" class="form-control form-control-lg" required>
+                    </div>
+                    <input type="hidden" name="next" value="{{ next }}">
+                    <button type="submit" class="btn btn-primary w-100 py-3 fs-5 fw-bold">Login เข้าสู่ระบบ</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

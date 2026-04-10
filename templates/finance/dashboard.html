@@ -1,0 +1,148 @@
+{% extends 'finance/base.html' %}
+{% load humanize %}
+{% block content %}
+<div class="row">
+    <div class="col-12 mb-4">
+        <div class="d-flex justify-content-between align-items-center">
+            <h3>สรุปรายเดือน (Monthly Summary)</h3>
+            <a href="{% url 'add_transaction' %}" class="btn btn-primary">+ เพิ่มรายการใหม่</a>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-3">
+    <div class="col-12">
+        <form method="GET" class="card p-3 shadow-sm border-0">
+            <div class="row align-items-end">
+                <div class="col-md-4 mb-3 mb-md-0">
+                    <label class="form-label fw-bold">📅 เลือกเดือน/ปีที่ต้องการ</label>
+                    <select name="filter_month" class="form-select">
+                        <option value="all" {% if filter_month == 'all' %}selected{% endif %}>แสดงข้อมูลตลอดเวลา (All Time)</option>
+                        {% for d in available_months %}
+                            <option value="{{ d|date:'Y-m' }}" {% if filter_month == d|date:'Y-m' %}selected{% endif %}>{{ d|date:'F Y' }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-5 mb-3 mb-md-0">
+                    <label class="form-label fw-bold">🏷️ หมวดหมู่รายการ</label>
+                    <select name="category" class="form-select">
+                        <option value="all" {% if category == 'all' %}selected{% endif %}>แสดงทั้งหมด (All)</option>
+                        <option value="SELL" {% if category == 'SELL' %}selected{% endif %}>ขายสินค้า (SELL) อย่างเดียว</option>
+                        <option value="BUY" {% if category == 'BUY' %}selected{% endif %}>ซื้อสินค้า (BUY) อย่างเดียว</option>
+                        <option value="INCOME" {% if category == 'INCOME' %}selected{% endif %}>รายรับอื่นๆ (INCOME) อย่างเดียว</option>
+                        <option value="EXPENSE" {% if category == 'EXPENSE' %}selected{% endif %}>รายจ่ายอื่นๆ (EXPENSE) อย่างเดียว</option>
+                    </select>
+                </div>
+                <div class="col-md-3 text-end">
+                    <button type="submit" class="btn btn-dark w-100">🔍 กรองข้อมูล</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="row">
+    {% for summary in summary_list %}
+    <div class="col-md-6 mb-4">
+        <div class="card h-100">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <span>
+                    สรุปยอดเดือน: {{ summary.period|date:"F Y" }}
+                </span>
+                {% if summary.NET_PROFIT >= 0 %}
+                    <span class="badge bg-success">กำไรสุทธิ: +{{ summary.NET_PROFIT|intcomma }} ฿</span>
+                {% else %}
+                    <span class="badge bg-danger">ขาดทุน/ติดลบ: {{ summary.NET_PROFIT|intcomma }} ฿</span>
+                {% endif %}
+            </div>
+            <div class="card-body">
+                <div class="row text-center mb-3">
+                    <div class="col-6">
+                        <h6 class="text-muted">ยอดขาย (SELL)</h6>
+                        <h4 class="text-income">{{ summary.SELL|intcomma }} ฿</h4>
+                    </div>
+                    <div class="col-6">
+                        <h6 class="text-muted">ยอดซื้อ (BUY)</h6>
+                        <h4 class="text-expense">{{ summary.BUY|intcomma }} ฿</h4>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-6">
+                        <p class="mb-1"><strong>รายรับอื่นๆ:</strong> <span class="text-income">{{ summary.INCOME|intcomma }}</span></p>
+                        <p class="mb-1"><strong>รายจ่ายอื่นๆ:</strong> <span class="text-expense">{{ summary.EXPENSE|intcomma }}</span></p>
+                    </div>
+                    <div class="col-6 text-end">
+                        <p class="mb-1"><strong>ภาษี(VAT) หักรอจ่าย:</strong> <span class="text-danger">{{ summary.VAT_RECEIVED|intcomma }}</span></p>
+                        <p class="mb-1"><strong>ภาษี(VAT) ซื้อขอคืนได้:</strong> <span class="text-success">{{ summary.VAT_PAID|intcomma }}</span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12"><div class="alert alert-info">ยังไม่มีข้อมูลในระบบ หรือยังไม่มีการกดบิลข้ามเดือน</div></div>
+    {% endfor %}
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <span>
+                    ประวัติรายการ (ล่าสุด 100 รายการ)
+                    {% if filter_month != 'all' %}<span class="badge bg-secondary ms-2">กรองเฉพาะ: เดือน {{ filter_month }}</span>{% endif %}
+                    {% if category != 'all' %}<span class="badge bg-info text-dark ms-1">หมวดหมู่: {{ category }}</span>{% endif %}
+                </span>
+                <div class="d-flex align-items-center">
+                    <span class="text-muted me-3" style="font-size: 0.9rem;">พบรายการทั้งหมด: {{ transactions|length }} รายการ (ในหน้านี้)</span>
+                    <a href="{% url 'export_csv' %}?filter_month={{ filter_month }}&category={{ category }}" class="btn btn-sm btn-success me-2" title="Export as Excel CSV">📥 โหลด CSV</a>
+                    <a href="{% url 'export_json' %}?filter_month={{ filter_month }}&category={{ category }}" class="btn btn-sm btn-warning text-dark" title="Export as JSON Data">📥 JSON</a>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th>วันที่/เวลาสร้าง</th>
+                            <th>อ้างอิงทำรายการ</th>
+                            <th>ประเภท</th>
+                            <th>ชื่อรายการ</th>
+                            <th class="text-end">ยอดก่อน VAT</th>
+                            <th class="text-end">VAT (7%)</th>
+                            <th class="text-end">ยอดสุทธิ (Net)</th>
+                            <th class="text-center">จัดการ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for t in transactions %}
+                        <tr>
+                            <td>
+                                <div>{{ t.date|date:"d M Y" }}</div>
+                            </td>
+                            <td><small class="text-muted">{{ t.created_at|date:"d/m/Y H:i" }}</small></td>
+                            <td>
+                                {% if t.transaction_type == 'BUY' or t.transaction_type == 'EXPENSE' %}
+                                    <span class="badge bg-danger">{{ t.get_transaction_type_display }}</span>
+                                {% else %}
+                                    <span class="badge bg-success">{{ t.get_transaction_type_display }}</span>
+                                {% endif %}
+                            </td>
+                            <td><strong>{{ t.title }}</strong></td>
+                            <td class="text-end">{{ t.price|intcomma }}</td>
+                            <td class="text-end">
+                                {% if t.has_vat %}{{ t.vat_amount|intcomma }}{% else %}-{% endif %}
+                            </td>
+                            <td class="text-end fw-bold">{{ t.total_price|intcomma }} ฿</td>
+                            <td class="text-center">
+                                <a href="{% url 'edit_transaction' t.id %}" class="btn btn-sm btn-outline-primary">✏️ แก้ไข</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
