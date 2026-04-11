@@ -1,0 +1,20 @@
+{
+  "status": "commited",
+  "type": "frontend",
+  "scope": "codebase",
+  "localEndpoint": "http://localhost:8000",
+  "loginUser": "admin",
+  "loginPassword": "1234",
+  "executionArgs": {
+    "projectName": "TradingApp",
+    "projectPath": "c:\\Users\\Asus\\Downloads\\Full Stack Developer\\TradingApp",
+    "testIds": [],
+    "additionalInstruction": "",
+    "serverMode": "development",
+    "envs": {
+      "API_KEY": "------------------------------"
+    }
+  },
+  "serverPort": 55065,
+  "proxy": "http://4f2fdc3d-e5e5-483c-a872-47aa66009c41:joymwETy3HJRoWGmxjXn1tEzhvtAZOhc@tun.testsprite.com:8080"
+}

@@ -1,0 +1,888 @@
+[
+  {
+    "id": "TC001",
+    "title": "Log in and reach the financial dashboard",
+    "description": "Verifies an authenticated user can log in and land on the dashboard where the monthly summary and recent transactions are displayed.",
+    "category": "User Login",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /accounts/login/"
+      },
+      {
+        "type": "action",
+        "description": "Fill {{LOGIN_USER}} into the username field"
+      },
+      {
+        "type": "action",
+        "description": "Fill {{LOGIN_PASSWORD}} into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the user lands on the dashboard"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the monthly summary and recent transactions are displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC002",
+    "title": "View dashboard monthly summary and recent transactions",
+    "description": "Verifies an authenticated user can load the dashboard and see the monthly summary and recent transactions section.",
+    "category": "Financial Dashboard",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /accounts/login/"
+      },
+      {
+        "type": "action",
+        "description": "Fill {{LOGIN_USER}} into the username field"
+      },
+      {
+        "type": "action",
+        "description": "Fill {{LOGIN_PASSWORD}} into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the monthly summary is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify recent transactions are displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC003",
+    "title": "Add a transaction and see it on the dashboard",
+    "description": "Verifies an authenticated user can add a valid transaction with VAT set and then see it appear on the dashboard.",
+    "category": "Add Transaction",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /accounts/login/"
+      },
+      {
+        "type": "action",
+        "description": "Fill {{LOGIN_USER}} into the username field"
+      },
+      {
+        "type": "action",
+        "description": "Fill {{LOGIN_PASSWORD}} into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the navigation to add a new transaction"
+      },
+      {
+        "type": "action",
+        "description": "Select a transaction type"
+      },
+      {
+        "type": "action",
+        "description": "Fill a valid date into the date field"
+      },
+      {
+        "type": "action",
+        "description": "Fill Test VAT transaction into the title field"
+      },
+      {
+        "type": "action",
+        "description": "Fill 100 into the price field"
+      },
+      {
+        "type": "action",
+        "description": "Toggle VAT on"
+      },
+      {
+        "type": "action",
+        "description": "Submit the transaction form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the user lands on the dashboard"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a transaction titled Test VAT transaction is visible in the recent transactions list"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC004",
+    "title": "Edit a transaction and see the updated record on the dashboard",
+    "description": "Verifies a user can create a transaction, edit it successfully, and then see the updated transaction reflected on the dashboard list.",
+    "category": "Edit Transaction",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /accounts/login/"
+      },
+      {
+        "type": "action",
+        "description": "Fill {{LOGIN_USER}} into the username field"
+      },
+      {
+        "type": "action",
+        "description": "Fill {{LOGIN_PASSWORD}} into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the link to add a new transaction"
+      },
+      {
+        "type": "action",
+        "description": "Fill a unique description into the description field"
+      },
+      {
+        "type": "action",
+        "description": "Fill a valid positive amount into the amount field"
+      },
+      {
+        "type": "action",
+        "description": "Select a valid transaction type"
+      },
+      {
+        "type": "action",
+        "description": "Select a valid category"
+      },
+      {
+        "type": "action",
+        "description": "Submit the transaction form"
+      },
+      {
+        "type": "action",
+        "description": "Click the edit action for the newly created transaction in the dashboard list"
+      },
+      {
+        "type": "action",
+        "description": "Modify the description field to a new unique value"
+      },
+      {
+        "type": "action",
+        "description": "Save changes"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the dashboard list shows the updated transaction description for the edited record"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC005",
+    "title": "Reject login with invalid credentials",
+    "description": "Verifies a user cannot log in with an incorrect password and sees an authentication error while remaining on the login page.",
+    "category": "User Login",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /accounts/login/"
+      },
+      {
+        "type": "action",
+        "description": "Fill {{LOGIN_USER}} into the username field"
+      },
+      {
+        "type": "action",
+        "description": "Fill invalid-password into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify an authentication error is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the user remains on the login page"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC006",
+    "title": "Filter dashboard by period and category",
+    "description": "Verifies an authenticated user can filter by period and category and the dashboard updates the summary and transaction list accordingly.",
+    "category": "Financial Dashboard",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /accounts/login/"
+      },
+      {
+        "type": "action",
+        "description": "Fill {{LOGIN_USER}} into the username field"
+      },
+      {
+        "type": "action",
+        "description": "Fill {{LOGIN_PASSWORD}} into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Select a period from the period filter dropdown"
+      },
+      {
+        "type": "action",
+        "description": "Select a category from the category filter dropdown"
+      },
+      {
+        "type": "action",
+        "description": "Submit the filter action"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the transaction list reflects the selected filters"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the summary reflects the selected filters"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC007",
+    "title": "Invalid edit shows validation errors and keeps user on the edit form",
+    "description": "Verifies that editing a transaction with invalid data is blocked with visible validation errors and the user remains on the edit form.",
+    "category": "Edit Transaction",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /accounts/login/"
+      },
+      {
+        "type": "action",
+        "description": "Fill {{LOGIN_USER}} into the username field"
+      },
+      {
+        "type": "action",
+        "description": "Fill {{LOGIN_PASSWORD}} into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the link to add a new transaction"
+      },
+      {
+        "type": "action",
+        "description": "Fill a unique description into the description field"
+      },
+      {
+        "type": "action",
+        "description": "Fill a valid positive amount into the amount field"
+      },
+      {
+        "type": "action",
+        "description": "Select a valid transaction type"
+      },
+      {
+        "type": "action",
+        "description": "Select a valid category"
+      },
+      {
+        "type": "action",
+        "description": "Submit the transaction form"
+      },
+      {
+        "type": "action",
+        "description": "Click the edit action for the newly created transaction in the dashboard list"
+      },
+      {
+        "type": "action",
+        "description": "Clear the amount field"
+      },
+      {
+        "type": "action",
+        "description": "Save changes"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a form validation error is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the user remains on the edit transaction form"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC008",
+    "title": "Add a transaction with VAT disabled",
+    "description": "Verifies an authenticated user can add a valid transaction with VAT turned off and then see it appear on the dashboard.",
+    "category": "Add Transaction",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /accounts/login/"
+      },
+      {
+        "type": "action",
+        "description": "Fill {{LOGIN_USER}} into the username field"
+      },
+      {
+        "type": "action",
+        "description": "Fill {{LOGIN_PASSWORD}} into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the navigation to add a new transaction"
+      },
+      {
+        "type": "action",
+        "description": "Select a transaction type"
+      },
+      {
+        "type": "action",
+        "description": "Fill a valid date into the date field"
+      },
+      {
+        "type": "action",
+        "description": "Fill Test no VAT transaction into the title field"
+      },
+      {
+        "type": "action",
+        "description": "Fill 50 into the price field"
+      },
+      {
+        "type": "action",
+        "description": "Ensure VAT is toggled off"
+      },
+      {
+        "type": "action",
+        "description": "Submit the transaction form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the user lands on the dashboard"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a transaction titled Test no VAT transaction is visible in the recent transactions list"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC009",
+    "title": "Prevent adding a transaction with missing required fields",
+    "description": "Verifies the add transaction form shows validation errors and does not submit when required fields are missing.",
+    "category": "Add Transaction",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /accounts/login/"
+      },
+      {
+        "type": "action",
+        "description": "Fill {{LOGIN_USER}} into the username field"
+      },
+      {
+        "type": "action",
+        "description": "Fill {{LOGIN_PASSWORD}} into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the navigation to add a new transaction"
+      },
+      {
+        "type": "action",
+        "description": "Submit the transaction form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify validation errors are visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the user remains on the add transaction form"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC010",
+    "title": "Confirm deletion removes transaction from the dashboard list",
+    "description": "Verifies that confirming the deletion prompt removes the selected transaction from the dashboard list.",
+    "category": "Delete Transaction",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /accounts/login/"
+      },
+      {
+        "type": "action",
+        "description": "Fill {{LOGIN_USER}} into the username field"
+      },
+      {
+        "type": "action",
+        "description": "Fill {{LOGIN_PASSWORD}} into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the link to add a new transaction"
+      },
+      {
+        "type": "action",
+        "description": "Fill a unique description into the description field"
+      },
+      {
+        "type": "action",
+        "description": "Fill a valid positive amount into the amount field"
+      },
+      {
+        "type": "action",
+        "description": "Select a valid transaction type"
+      },
+      {
+        "type": "action",
+        "description": "Select a valid category"
+      },
+      {
+        "type": "action",
+        "description": "Submit the transaction form"
+      },
+      {
+        "type": "action",
+        "description": "Click the delete action for the newly created transaction in the dashboard list"
+      },
+      {
+        "type": "action",
+        "description": "Accept the browser deletion prompt"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the deleted transaction no longer appears in the dashboard list"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC011",
+    "title": "Export CSV downloads a file for the current dashboard view",
+    "description": "Verifies that exporting to CSV from the dashboard triggers a CSV download for the currently shown dataset.",
+    "category": "Export Data",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /accounts/login/"
+      },
+      {
+        "type": "action",
+        "description": "Fill {{LOGIN_USER}} into the username field"
+      },
+      {
+        "type": "action",
+        "description": "Fill {{LOGIN_PASSWORD}} into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the link to add a new transaction"
+      },
+      {
+        "type": "action",
+        "description": "Fill a unique description into the description field"
+      },
+      {
+        "type": "action",
+        "description": "Fill a valid positive amount into the amount field"
+      },
+      {
+        "type": "action",
+        "description": "Select a valid transaction type"
+      },
+      {
+        "type": "action",
+        "description": "Select a valid category"
+      },
+      {
+        "type": "action",
+        "description": "Submit the transaction form"
+      },
+      {
+        "type": "action",
+        "description": "Click the export CSV action from the dashboard"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a CSV file download is triggered"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC012",
+    "title": "Prevent adding a transaction with an invalid price",
+    "description": "Verifies the add transaction form blocks submission and shows a validation error when the price is not a valid number.",
+    "category": "Add Transaction",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /accounts/login/"
+      },
+      {
+        "type": "action",
+        "description": "Fill {{LOGIN_USER}} into the username field"
+      },
+      {
+        "type": "action",
+        "description": "Fill {{LOGIN_PASSWORD}} into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the navigation to add a new transaction"
+      },
+      {
+        "type": "action",
+        "description": "Select a transaction type"
+      },
+      {
+        "type": "action",
+        "description": "Fill a valid date into the date field"
+      },
+      {
+        "type": "action",
+        "description": "Fill Invalid price transaction into the title field"
+      },
+      {
+        "type": "action",
+        "description": "Fill abc into the price field"
+      },
+      {
+        "type": "action",
+        "description": "Submit the transaction form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a price validation error is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the user remains on the add transaction form"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC013",
+    "title": "Cancel deletion keeps transaction in the dashboard list",
+    "description": "Verifies that cancelling the deletion prompt leaves the selected transaction visible on the dashboard list.",
+    "category": "Delete Transaction",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /accounts/login/"
+      },
+      {
+        "type": "action",
+        "description": "Fill {{LOGIN_USER}} into the username field"
+      },
+      {
+        "type": "action",
+        "description": "Fill {{LOGIN_PASSWORD}} into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the link to add a new transaction"
+      },
+      {
+        "type": "action",
+        "description": "Fill a unique description into the description field"
+      },
+      {
+        "type": "action",
+        "description": "Fill a valid positive amount into the amount field"
+      },
+      {
+        "type": "action",
+        "description": "Select a valid transaction type"
+      },
+      {
+        "type": "action",
+        "description": "Select a valid category"
+      },
+      {
+        "type": "action",
+        "description": "Submit the transaction form"
+      },
+      {
+        "type": "action",
+        "description": "Click the delete action for the newly created transaction in the dashboard list"
+      },
+      {
+        "type": "action",
+        "description": "Dismiss the browser deletion prompt"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the transaction still appears in the dashboard list"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC014",
+    "title": "Switch to dark theme from the dashboard",
+    "description": "Verifies an authenticated user can toggle the theme to dark mode from the dashboard and the UI switches to a dark theme.",
+    "category": "Dark Mode Toggle",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /accounts/login/"
+      },
+      {
+        "type": "action",
+        "description": "Fill {{LOGIN_USER}} into the username field"
+      },
+      {
+        "type": "action",
+        "description": "Fill {{LOGIN_PASSWORD}} into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Click the theme toggle control to switch to dark mode"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the page is displayed in dark theme"
+      }
+    ],
+    "priority": "Low"
+  },
+  {
+    "id": "TC015",
+    "title": "Switch back to light theme from dark mode",
+    "description": "Verifies an authenticated user can toggle from dark mode back to light mode and the UI switches to a light theme.",
+    "category": "Dark Mode Toggle",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /accounts/login/"
+      },
+      {
+        "type": "action",
+        "description": "Fill {{LOGIN_USER}} into the username field"
+      },
+      {
+        "type": "action",
+        "description": "Fill {{LOGIN_PASSWORD}} into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Click the theme toggle control to switch to dark mode"
+      },
+      {
+        "type": "action",
+        "description": "Click the theme toggle control to switch to light mode"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the page is displayed in light theme"
+      }
+    ],
+    "priority": "Low"
+  },
+  {
+    "id": "TC016",
+    "title": "Theme setting persists after page reload",
+    "description": "Verifies that after an authenticated user toggles the theme, reloading the dashboard keeps the selected theme applied.",
+    "category": "Dark Mode Toggle",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /accounts/login/"
+      },
+      {
+        "type": "action",
+        "description": "Fill {{LOGIN_USER}} into the username field"
+      },
+      {
+        "type": "action",
+        "description": "Fill {{LOGIN_PASSWORD}} into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Click the theme toggle control to switch to dark mode"
+      },
+      {
+        "type": "action",
+        "description": "Reload the page"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the page is displayed in dark theme"
+      }
+    ],
+    "priority": "Low"
+  },
+  {
+    "id": "TC017",
+    "title": "Theme persists when navigating away and returning to dashboard",
+    "description": "Verifies the selected theme remains applied when the authenticated user navigates to another page and returns to the dashboard.",
+    "category": "Dark Mode Toggle",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /accounts/login/"
+      },
+      {
+        "type": "action",
+        "description": "Fill {{LOGIN_USER}} into the username field"
+      },
+      {
+        "type": "action",
+        "description": "Fill {{LOGIN_PASSWORD}} into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Click the theme toggle control to switch to dark mode"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /add/"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the page is displayed in dark theme"
+      }
+    ],
+    "priority": "Low"
+  },
+  {
+    "id": "TC018",
+    "title": "Theme toggle control remains usable across repeated toggles",
+    "description": "Verifies an authenticated user can toggle the theme repeatedly and the UI continues to switch themes without getting stuck.",
+    "category": "Dark Mode Toggle",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /accounts/login/"
+      },
+      {
+        "type": "action",
+        "description": "Fill {{LOGIN_USER}} into the username field"
+      },
+      {
+        "type": "action",
+        "description": "Fill {{LOGIN_PASSWORD}} into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Click the theme toggle control to switch to dark mode"
+      },
+      {
+        "type": "action",
+        "description": "Click the theme toggle control to switch to light mode"
+      },
+      {
+        "type": "action",
+        "description": "Click the theme toggle control to switch to dark mode"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the page is displayed in dark theme"
+      }
+    ],
+    "priority": "Low"
+  }
+]

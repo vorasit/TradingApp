@@ -1,0 +1,121 @@
+version: "2"
+type: frontend
+tech_stack:
+  - Django
+  - Python
+  - Bootstrap 5
+  - HTML
+  - Vanilla JS
+routes:
+  - path: /
+    file: finance/views.py
+    auth_required: true
+    description: Financial Dashboard
+  - path: /add/
+    file: finance/views.py
+    auth_required: true
+    description: Add new transaction
+  - path: /edit/<int:transaction_id>/
+    file: finance/views.py
+    auth_required: true
+    description: Edit an existing transaction
+  - path: /delete/<int:transaction_id>/
+    file: finance/views.py
+    auth_required: true
+    description: Delete an existing transaction
+  - path: /export/csv/
+    file: finance/views.py
+    auth_required: true
+    description: Export transactions to CSV
+  - path: /export/json/
+    file: finance/views.py
+    auth_required: true
+    description: Export transactions to JSON
+  - path: /accounts/login/
+    file: templates/registration/login.html
+    auth_required: false
+    description: User Login
+features:
+  - name: User Login
+    description: Secure login using Django authentication
+    files:
+      - templates/registration/login.html
+      - trading_system/urls.py
+    entry_route: /accounts/login/
+    user_interactions:
+      - Fill username field
+      - Fill password field
+      - Click Login button
+    api_calls: []
+    auth_required: false
+  - name: Financial Dashboard
+    description: View summarized logs, filter by month/year and category
+    files:
+      - templates/finance/dashboard.html
+      - finance/views.py
+    entry_route: /
+    user_interactions:
+      - Select period filter from dropdown
+      - Select category filter from dropdown
+      - Click Filter button
+    api_calls: []
+    auth_required: true
+  - name: Add Transaction
+    description: Enter new financial records with automatic VAT calculation
+    files:
+      - templates/finance/transaction_form.html
+      - finance/views.py
+    entry_route: /add/
+    user_interactions:
+      - Select transaction type
+      - Pick date
+      - Enter title
+      - Enter price
+      - Toggle VAT switch
+      - Submit form
+    api_calls: []
+    auth_required: true
+  - name: Edit Transaction
+    description: Edit previously entered financial records
+    files:
+      - templates/finance/transaction_form.html
+      - finance/views.py
+    entry_route: /
+    user_interactions:
+      - Click Edit button on a transaction row
+      - Modify form data
+      - Save changes
+    api_calls: []
+    auth_required: true
+  - name: Delete Transaction
+    description: Remove a financial record from the database
+    files:
+      - templates/finance/dashboard.html
+      - finance/views.py
+    entry_route: /
+    user_interactions:
+      - Click Delete button on a transaction row
+      - Confirm browser deletion prompt
+    api_calls: []
+    auth_required: true
+  - name: Export Data
+    description: Download currently filtered dataset as CSV or JSON
+    files:
+      - templates/finance/dashboard.html
+      - finance/views.py
+    entry_route: /
+    user_interactions:
+      - Click Export CSV or JSON button in dashboard
+      - Browser downloads file
+    api_calls: []
+    auth_required: true
+  - name: Dark Mode Toggle
+    description: Toggle responsive dark theme via Navbar
+    files:
+      - templates/finance/base.html
+    entry_route: /
+    user_interactions:
+      - Click moon/sun icon to toggle dark and light modes
+    api_calls: []
+    auth_required: true
+known_limitations: []
