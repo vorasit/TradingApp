@@ -33,7 +33,7 @@ async def run_test():
         # -> Navigate to http://localhost:8000
         await page.goto("http://localhost:8000")
         
-        # -> Enter 'admin', Enter '1234', Click element
+        # -> Fill the username field with 'admin'.
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/div/div/div/div/div[2]/form/div/input').nth(0)
@@ -49,28 +49,15 @@ async def run_test():
         elem = frame.locator('xpath=/html/body/div/div/div/div/div[2]/form/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Click the theme toggle control to switch the UI from dark mode back to light mode, then observe the page to confirm the light theme is applied.
+        # -> Click the theme toggle control (header moon/sun button) to switch to light mode, wait for the UI to update, then verify the page displays the light theme.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/nav/div/div/ul/li/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Click the theme toggle control (element index 236) to attempt switching the UI to light mode, then observe the page to confirm the light theme is applied.
+        # --> Assertions to verify final state
         frame = context.pages[-1]
-        # Click element
-        elem = frame.locator('xpath=/html/body/nav/div/a').nth(0)
-        await asyncio.sleep(3); await elem.click()
-        
-        # -> Click the theme toggle control (index 939) to switch the UI to light mode, then observe the page to confirm the light theme is applied.
-        frame = context.pages[-1]
-        # Click element
-        elem = frame.locator('xpath=/html/body/nav/div/div/ul/li/button').nth(0)
-        await asyncio.sleep(3); await elem.click()
-        
-        # --> Test passed — verified by AI agent
-        frame = context.pages[-1]
-        current_url = await frame.evaluate("() => window.location.href")
-        assert current_url is not None, "Test completed successfully"
+        assert await frame.locator("xpath=//*[contains(., 'Light mode')]").nth(0).is_visible(), "The page should be displayed in light theme after toggling from dark mode"
         await asyncio.sleep(5)
 
     finally:

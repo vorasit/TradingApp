@@ -1,0 +1,89 @@
+{% extends 'finance/base.html' %}
+{% load humanize %}
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h3 class="text-primary border-bottom pb-2">👑 บอร์ดผู้บริหาร (Executive Analytics & P&L)</h3>
+        <p class="text-muted">ข้อมูลรายรับ-รายจ่ายที่ "อนุมัติจ่ายจริงแล้ว" ในระบบ (PAID Status)</p>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card bg-success text-white text-center p-3 shadow">
+            <h6>รายได้รวมทั้งหมด (Total Revenue)</h6>
+            <h3 class="mb-0">{{ total_sales|intcomma }} ฿</h3>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-danger text-white text-center p-3 shadow">
+            <h6>ต้นทุนขายตรง (COGS)</h6>
+            <h3 class="mb-0">{{ cogs|intcomma }} ฿</h3>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-warning text-dark text-center p-3 shadow">
+            <h6>กำไรขั้นต้น (Gross Profit)</h6>
+            <h3 class="mb-0">{{ gross_profit|intcomma }} ฿</h3>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-primary text-white text-center p-3 shadow">
+            <h6>กำไรสุทธิ (Net Profit vs OPEX)</h6>
+            <h3 class="mb-0">{{ net_profit|intcomma }} ฿</h3>
+            <small>หัก OPEX ({{ opex|intcomma }})</small>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6 mb-4">
+        <div class="card shadow h-100">
+            <div class="card-header bg-dark text-white">🏆 ลูกค้าที่สร้างรายได้สูงสุด (Top 5 Customers)</div>
+            <div class="card-body">
+                <canvas id="customerChart"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 mb-4">
+        <div class="card shadow h-100">
+            <div class="card-header bg-dark text-white">🔥 สินค้าขายดี (Top 5 Products)</div>
+            <div class="card-body">
+                <canvas id="productChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const customerData = JSON.parse('{{ top_customers_json|escapejs }}');
+    const productData = JSON.parse('{{ top_products_json|escapejs }}');
+
+    // Customer Chart
+    const ctxCust = document.getElementById('customerChart').getContext('2d');
+    new Chart(ctxCust, {
+        type: 'pie',
+        data: {
+            labels: customerData.map(d => d.contact__name),
+            datasets: [{
+                data: customerData.map(d => d.total),
+                backgroundColor: ['#4e73df', '#1cc88a', '#36b9cc', '#f6c23e', '#e74a3b']
+            }]
+        }
+    });
+
+    // Product Chart
+    const ctxProd = document.getElementById('productChart').getContext('2d');
+    new Chart(ctxProd, {
+        type: 'doughnut',
+        data: {
+            labels: productData.map(d => d.product__name),
+            datasets: [{
+                data: productData.map(d => d.qty),
+                backgroundColor: ['#e74a3b', '#f6c23e', '#36b9cc', '#1cc88a', '#4e73df']
+            }]
+        }
+    });
+</script>
+{% endblock %}

@@ -33,7 +33,7 @@ async def run_test():
         # -> Navigate to http://localhost:8000
         await page.goto("http://localhost:8000")
         
-        # -> Fill the username field with 'admin' (first immediate action).
+        # -> Fill the username field (index 49) with 'admin' as the first step of the login attempt.
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/div/div/div/div/div[2]/form/div/input').nth(0)

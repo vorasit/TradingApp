@@ -33,7 +33,7 @@ async def run_test():
         # -> Navigate to http://localhost:8000
         await page.goto("http://localhost:8000")
         
-        # -> Fill the username and password fields with the provided credentials and submit the login form.
+        # -> Fill the username and password fields and submit the login form.
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/div/div/div/div/div[2]/form/div/input').nth(0)
@@ -49,16 +49,22 @@ async def run_test():
         elem = frame.locator('xpath=/html/body/div/div/div/div/div[2]/form/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Open the edit form for an existing transaction by clicking its '✏️ แก้ไข' Edit link (will open the edit transaction form). Then, after the edit form loads, clear the amount field and save to trigger validation.
+        # -> Click the '+ เพิ่มรายการใหม่' link to open the add-transaction form.
         frame = context.pages[-1]
         # Click element
-        elem = frame.locator('xpath=/html/body/div/div[4]/div/div/div[2]/table/tbody/tr[2]/td[8]/div/a').nth(0)
+        elem = frame.locator('xpath=/html/body/nav/div/div/ul/li[9]/a').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Clear the amount field (index 766) and click the Save button (index 772) to trigger the form validation and check for visible errors and that the user remains on the edit page.
+        # -> Navigate to the Dashboard (หน้าหลัก) to locate the transaction list so we can edit an entry.
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/nav/div/div/ul/li[2]/a').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        # -> Clear the 'ระบุยอดเงิน (รวมทั้งหมด)' (price) field and click 'บันทึกข้อมูลเข้าสู่ระบบ' to trigger validation and observe the result.
         frame = context.pages[-1]
         # Input text
-        elem = frame.locator('xpath=/html/body/div/div/div/div/div[2]/form/div[4]/div/input').nth(0)
+        elem = frame.locator('xpath=/html/body/div/div/div/div/div[2]/form/div[4]/div/div[3]/input').nth(0)
         await asyncio.sleep(3); await elem.fill('')
         
         frame = context.pages[-1]

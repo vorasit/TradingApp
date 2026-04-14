@@ -33,7 +33,7 @@ async def run_test():
         # -> Navigate to http://localhost:8000
         await page.goto("http://localhost:8000")
         
-        # -> Fill the username 'admin' into input index 2, fill the password '1234' into input index 4, then click the Login button at index 10 to sign in.
+        # -> Fill username and password with the provided admin credentials and submit the login form.
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/div/div/div/div/div[2]/form/div/input').nth(0)
@@ -49,39 +49,45 @@ async def run_test():
         elem = frame.locator('xpath=/html/body/div/div/div/div/div[2]/form/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Click the '+ เพิ่มรายการใหม่' (Add new transaction) link to open the transaction creation form.
+        # -> Open the 'Add new transaction' form by clicking '+ เพิ่มรายการใหม่' on the dashboard.
         frame = context.pages[-1]
         # Click element
-        elem = frame.locator('xpath=/html/body/nav/div/div/ul/li[4]/a').nth(0)
+        elem = frame.locator('xpath=/html/body/nav/div/div/ul/li[9]/a').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Open the 'ประเภทของรายการ' (transaction type) dropdown so a specific type can be selected. According to the form rules, set this context field first and wait for dependent inputs/options to appear before filling other fields.
+        # -> Open the 'ประเภทของรายการ' (transaction type) dropdown so we can select a transaction type (context-setting field).
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div/div/div/div/div[2]/form/div/select').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Fill the transaction title and amount, then submit the form to create the transaction.
+        # -> Fill the transaction title and amount, then submit the form to create the transaction. After submission, wait for the dashboard/list to appear so we can find and edit the created transaction.
         frame = context.pages[-1]
         # Input text
-        elem = frame.locator('xpath=/html/body/div/div/div/div/div[2]/form/div[3]/input').nth(0)
-        await asyncio.sleep(3); await elem.fill('E2E Test Create 2026-04-11 1')
+        elem = frame.locator('xpath=/html/body/div/div/div/div/div[2]/form/div[5]/input').nth(0)
+        await asyncio.sleep(3); await elem.fill('AutoTestTxn-1')
         
         frame = context.pages[-1]
         # Input text
-        elem = frame.locator('xpath=/html/body/div/div/div/div/div[2]/form/div[4]/div/input').nth(0)
-        await asyncio.sleep(3); await elem.fill('1000.00')
+        elem = frame.locator('xpath=/html/body/div/div/div/div/div[2]/form/div[4]/div/div[3]/input').nth(0)
+        await asyncio.sleep(3); await elem.fill('123.45')
         
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div/div/div/div/div[2]/form/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Change the transaction title to 'E2E Test Edited 2026-04-11 1' and save the form, then verify the dashboard shows the updated title.
+        # -> Click the edit action for the newly created transaction (AutoTestTxn-1) to open the edit form.
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div/div[5]/div/div/div[2]/table/tbody/tr/td[11]/div/a[2]').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        # -> Change the transaction title to 'AutoTestTxn-1-edited', save the changes, then verify the dashboard list shows the updated title.
         frame = context.pages[-1]
         # Input text
-        elem = frame.locator('xpath=/html/body/div/div/div/div/div[2]/form/div[3]/input').nth(0)
-        await asyncio.sleep(3); await elem.fill('E2E Test Edited 2026-04-11 1')
+        elem = frame.locator('xpath=/html/body/div/div/div/div/div[2]/form/div[5]/input').nth(0)
+        await asyncio.sleep(3); await elem.fill('AutoTestTxn-1-edited')
         
         frame = context.pages[-1]
         # Click element

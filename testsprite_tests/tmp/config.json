@@ -9,12 +9,12 @@
     "projectName": "TradingApp",
     "projectPath": "c:\\Users\\Asus\\Downloads\\Full Stack Developer\\TradingApp",
     "testIds": [],
-    "additionalInstruction": "",
+    "additionalInstruction": "Test the new Executive ERP features: Quotation creation and Executive Analytics rendering",
     "serverMode": "development",
     "envs": {
-      "API_KEY": "------------------------------"
+      "API_KEY": "---------------------------------"
     }
   },
-  "serverPort": 55065,
-  "proxy": "http://4f2fdc3d-e5e5-483c-a872-47aa66009c41:joymwETy3HJRoWGmxjXn1tEzhvtAZOhc@tun.testsprite.com:8080"
+  "serverPort": 52170,
+  "proxy": "http://58f5faa0-4a0f-4320-bf96-8f887b18fc0e:fSahC776DjgwrPQlwroSQ4kgMV2fLlhm@tun.testsprite.com:8080"
 }

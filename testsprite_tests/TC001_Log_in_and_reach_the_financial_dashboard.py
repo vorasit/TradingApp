@@ -33,7 +33,7 @@ async def run_test():
         # -> Navigate to http://localhost:8000
         await page.goto("http://localhost:8000")
         
-        # -> Fill username and password with provided credentials and submit the login form to land on the dashboard.
+        # -> Fill the username and password fields and submit the login form, then verify landing on the dashboard and that monthly summary and recent transactions are displayed.
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/div/div/div/div/div[2]/form/div/input').nth(0)

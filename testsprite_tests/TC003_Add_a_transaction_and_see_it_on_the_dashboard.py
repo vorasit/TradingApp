@@ -33,7 +33,7 @@ async def run_test():
         # -> Navigate to http://localhost:8000
         await page.goto("http://localhost:8000")
         
-        # -> Fill the username and password fields with admin/1234 and submit the login form.
+        # -> Fill the username and password fields and submit the login form to authenticate the user.
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/div/div/div/div/div[2]/form/div/input').nth(0)
@@ -49,35 +49,35 @@ async def run_test():
         elem = frame.locator('xpath=/html/body/div/div/div/div/div[2]/form/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Click the '+ เพิ่มรายการใหม่' button to open the add-transaction form.
+        # -> Open the 'Add new transaction' form by clicking '+ เพิ่มรายการใหม่'.
         frame = context.pages[-1]
         # Click element
-        elem = frame.locator('xpath=/html/body/nav/div/div/ul/li[4]/a').nth(0)
+        elem = frame.locator('xpath=/html/body/nav/div/div/ul/li[9]/a').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Open the transaction type dropdown so I can choose a transaction type (context-setting field).
+        # -> Open the 'ประเภทของรายการ' (transaction type) dropdown so we can select a transaction type (context-setting field). After that, choose a specific type and continue filling the form.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div/div/div/div/div[2]/form/div/select').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Fill title 'Test VAT transaction', set price to 100, enable VAT (toggle switch), and submit the form to create the transaction.
+        # -> Fill the title and price, enable the VAT toggle, submit the transaction form, then verify the new 'Test VAT transaction' appears on the dashboard.
         frame = context.pages[-1]
         # Input text
-        elem = frame.locator('xpath=/html/body/div/div/div/div/div[2]/form/div[3]/input').nth(0)
+        elem = frame.locator('xpath=/html/body/div/div/div/div/div[2]/form/div[5]/input').nth(0)
         await asyncio.sleep(3); await elem.fill('Test VAT transaction')
         
         frame = context.pages[-1]
         # Input text
-        elem = frame.locator('xpath=/html/body/div/div/div/div/div[2]/form/div[4]/div/input').nth(0)
+        elem = frame.locator('xpath=/html/body/div/div/div/div/div[2]/form/div[4]/div/div[3]/input').nth(0)
         await asyncio.sleep(3); await elem.fill('100')
         
         frame = context.pages[-1]
         # Click element
-        elem = frame.locator('xpath=/html/body/div/div/div/div/div[2]/form/div[5]/input').nth(0)
+        elem = frame.locator('xpath=/html/body/div/div/div/div/div[2]/form/div[8]/input').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Click the submit button ('บันทึกข้อมูลเข้าสู่ระบบ') to save the transaction, then verify the new transaction titled 'Test VAT transaction' appears on the dashboard.
+        # -> Click the Save/Submit button to create the transaction, wait for the dashboard to load/update, then verify the new 'Test VAT transaction' appears in the recent transactions list.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div/div/div/div/div[2]/form/button').nth(0)

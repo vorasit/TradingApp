@@ -1,0 +1,140 @@
+{% extends 'finance/base.html' %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow">
+            <div class="card-header bg-secondary text-white">
+                {% if quotation %}📝 แก้ไขเอกสารใบเสนอราคา{% else %}📝 สร้างร่างใบเสนอราคา / สั่งซื้อ ใหม่{% endif %}
+            </div>
+            <div class="card-body p-4">
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">ประเภทเอกสารตั้งต้น</label>
+                            <select name="transaction_type" class="form-select" required>
+                                <option value="" disabled selected>-- เลือกประเภท --</option>
+                                <option value="SELL" {% if quotation.transaction_type == 'SELL' %}selected{% endif %}>เสนอขายสินค้า (ฝั่งรายได้)</option>
+                                <option value="BUY" {% if quotation.transaction_type == 'BUY' %}selected{% endif %}>เสนอสั่งซื้อสินค้า (ฝั่งรายจ่าย)</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">สถานะการอนุมัติเอกสาร</label>
+                            <select name="status" class="form-select border-primary" required>
+                                <option value="DRAFT" {% if quotation.status == 'DRAFT' or not quotation %}selected{% endif %}>📄 รอพิจารณา (DRAFT)</option>
+                                <option value="APPROVED" {% if quotation.status == 'APPROVED' %}selected{% endif %}>✅ อนุมัติแล้ว (เตรียมแปลงบิลได้)</option>
+                                <option value="REJECTED" {% if quotation.status == 'REJECTED' %}selected{% endif %}>❌ ตีตก / ไม่อนุมัติ</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">วันที่ทำเอกสาร</label>
+                            <input type="date" name="date" id="qDate" class="form-control" value="{{ quotation.date|date:'Y-m-d' }}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">หมวดหมู่รายจ่าย (หากเป็นฝั่งซื้อ)</label>
+                            <select name="expense_category" class="form-select">
+                                <option value="N/A" {% if quotation.expense_category == 'N/A' %}selected{% endif %}>ไม่ใช่รายจ่าย (หรือเว้นไว้)</option>
+                                <option value="COGS" {% if quotation.expense_category == 'COGS' %}selected{% endif %}>COGS - ต้นทุนขายตรง</option>
+                                <option value="OPEX" {% if quotation.expense_category == 'OPEX' %}selected{% endif %}>OPEX - ค่าใช้จ่ายดำเนินงาน</option>
+                                <option value="CAPEX" {% if quotation.expense_category == 'CAPEX' %}selected{% endif %}>CAPEX - อุปกรณ์ทุน/ทรัพย์สิน</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">ระบุคู่ค้า (เสนอใคร/ซื้อที่ไหน)</label>
+                            <select name="contact" class="form-select">
+                                <option value="">-- ไม่ระบุ --</option>
+                                {% for c in contacts %}
+                                    <option value="{{ c.id }}" {% if quotation.contact.id == c.id %}selected{% endif %}>{{ c.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">อ้างอิงรหัสสินค้า (ตัดคลังมั้ยถ้าผ่าน)</label>
+                            <select name="product" class="form-select">
+                                <option value="">-- ไม่ผูกสินค้าคลัง --</option>
+                                {% for p in products %}
+                                    <option value="{{ p.id }}" {% if quotation.product.id == p.id %}selected{% endif %}>[{{ p.code }}] {{ p.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="mb-3 border rounded p-3 bg-light">
+                        <label class="form-label fw-bold text-primary">ตั้งค่าสกุลเงิน (Multi-Currency)</label>
+                        <div class="row">
+                            <div class="col-4">
+                                <label class="form-label small">เลือกสกุลเงิน</label>
+                                <select name="currency" id="currencySelect" class="form-select" onchange="toggleExchangeRate()">
+                                    <option value="THB" {% if quotation.currency == 'THB' or not quotation %}selected{% endif %}>THB (ไทย)</option>
+                                    <option value="USD" {% if quotation.currency == 'USD' %}selected{% endif %}>USD</option>
+                                    <option value="CNY" {% if quotation.currency == 'CNY' %}selected{% endif %}>CNY</option>
+                                    <option value="JPY" {% if quotation.currency == 'JPY' %}selected{% endif %}>JPY</option>
+                                    <option value="EUR" {% if quotation.currency == 'EUR' %}selected{% endif %}>EUR</option>
+                                </select>
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label small">เรทเมื่อเทียบกับ (บาท)</label>
+                                <input type="number" step="0.0001" name="exchange_rate" id="exchangeRate" class="form-control" value="{{ quotation.exchange_rate|default:1.0 }}" {% if quotation.currency == 'THB' or not quotation %}readonly{% endif %}>
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label small">ยอดรวมสกุลเงินนั้น</label>
+                                <input type="number" step="0.01" name="price" class="form-control" placeholder="0.00" value="{% if quotation.currency != 'THB' %}{{ quotation.foreign_price }}{% else %}{{ quotation.price }}{% endif %}" required>
+                            </div>
+                        </div>
+                        <small class="text-muted d-block mt-2">* หากเลือก THB จะคิดเรท 1.0 เสมอ, หากเลือกสกุลอื่น โปรดกรอกเรทแปลงเงินไทยระบบจะคำนวณเข้าบัญชีไทยอัตโนมัติ</small>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">ชื่อรายการชี้แจง <span class="text-danger">*</span></label>
+                        <input type="text" name="title" class="form-control" value="{{ quotation.title }}" required>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-6">
+                            <label class="form-label fw-bold">แท็กหมวดหมู่ย่อย</label>
+                            <input type="text" name="tag" class="form-control" value="{{ quotation.tag|default_if_none:'' }}">
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label fw-bold">จำนวนสินค้ารวม (Quantity)</label>
+                            <input type="number" name="quantity" class="form-control" value="{{ quotation.quantity|default:1 }}">
+                        </div>
+                    </div>
+
+                    <div class="form-check form-switch mb-4 pb-3 border-bottom">
+                        <input class="form-check-input" type="checkbox" role="switch" name="has_vat" id="vatSwitch" style="transform: scale(1.3); margin-right: 10px;" {% if quotation.has_vat %}checked{% endif %}>
+                        <label class="form-check-label" for="vatSwitch" style="padding-left: 5px;">
+                            <strong>เปิดระบบบวกเพิ่ม VAT 7% จากยอดเงินที่ตั้งไว้</strong>
+                        </label>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100 py-2 fs-5">บันทึกร่างเอกสาร</button>
+                    <a href="{% url 'quotation_list' %}" class="btn btn-outline-secondary w-100 mt-2">ยกเลิก</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    {% if not quotation %}
+        document.getElementById('qDate').valueAsDate = new Date();
+    {% endif %}
+
+    function toggleExchangeRate() {
+        var curr = document.getElementById('currencySelect').value;
+        var rate = document.getElementById('exchangeRate');
+        if(curr === 'THB') {
+            rate.value = "1.0000";
+            rate.readOnly = true;
+        } else {
+            rate.readOnly = false;
+        }
+    }
+</script>
+{% endblock %}

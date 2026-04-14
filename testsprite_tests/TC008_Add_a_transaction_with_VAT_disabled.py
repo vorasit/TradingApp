@@ -33,7 +33,7 @@ async def run_test():
         # -> Navigate to http://localhost:8000
         await page.goto("http://localhost:8000")
         
-        # -> Fill the username and password fields and submit the login form (authenticate the user).
+        # -> Fill the username and password fields and submit the login form.
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/div/div/div/div/div[2]/form/div/input').nth(0)
@@ -49,29 +49,23 @@ async def run_test():
         elem = frame.locator('xpath=/html/body/div/div/div/div/div[2]/form/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Open the 'Add new transaction' form by clicking '+ เพิ่มรายการใหม่'.
+        # -> Open the 'Add new transaction' form by clicking the '+ เพิ่มรายการใหม่' button.
         frame = context.pages[-1]
         # Click element
-        elem = frame.locator('xpath=/html/body/nav/div/div/ul/li[4]/a').nth(0)
+        elem = frame.locator('xpath=/html/body/nav/div/div/ul/li[9]/a').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Fill the date field with 2026-04-11 (YYYY-MM-DD).
+        # -> Fill the title and price fields, ensure VAT remains off, then submit the form to save the transaction.
         frame = context.pages[-1]
         # Input text
-        elem = frame.locator('xpath=/html/body/div/div/div/div/div[2]/form/div[2]/input').nth(0)
-        await asyncio.sleep(3); await elem.fill('2026-04-11')
-        
-        frame = context.pages[-1]
-        # Input text
-        elem = frame.locator('xpath=/html/body/div/div/div/div/div[2]/form/div[3]/input').nth(0)
+        elem = frame.locator('xpath=/html/body/div/div/div/div/div[2]/form/div[5]/input').nth(0)
         await asyncio.sleep(3); await elem.fill('Test no VAT transaction')
         
         frame = context.pages[-1]
         # Input text
-        elem = frame.locator('xpath=/html/body/div/div/div/div/div[2]/form/div[4]/div/input').nth(0)
+        elem = frame.locator('xpath=/html/body/div/div/div/div/div[2]/form/div[4]/div/div[3]/input').nth(0)
         await asyncio.sleep(3); await elem.fill('50')
         
-        # -> Click the submit button to save the transaction, then verify the dashboard shows a recent transaction titled 'Test no VAT transaction'.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div/div/div/div/div[2]/form/button').nth(0)

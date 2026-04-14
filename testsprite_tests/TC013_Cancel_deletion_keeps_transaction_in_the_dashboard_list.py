@@ -33,7 +33,7 @@ async def run_test():
         # -> Navigate to http://localhost:8000
         await page.goto("http://localhost:8000")
         
-        # -> Fill the username and password fields and submit the login form using provided credentials.
+        # -> Fill the username and password fields and submit the login form.
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/div/div/div/div/div[2]/form/div/input').nth(0)
@@ -49,44 +49,15 @@ async def run_test():
         elem = frame.locator('xpath=/html/body/div/div/div/div/div[2]/form/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Open the 'Add new transaction' form by clicking the '+ เพิ่มรายการใหม่' link/button.
+        # -> Click the delete button for a transaction to open the deletion confirmation prompt so we can dismiss (cancel) it and then verify the transaction remains listed.
         frame = context.pages[-1]
         # Click element
-        elem = frame.locator('xpath=/html/body/nav/div/div/ul/li[4]/a').nth(0)
+        elem = frame.locator('xpath=/html/body/div/div[5]/div/div/div[2]/table/tbody/tr/td[11]/div/form/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Open the transaction-type dropdown so I can choose a transaction type (click element 741). After the dropdown opens I will observe the options and select a valid type.
+        # --> Assertions to verify final state
         frame = context.pages[-1]
-        # Click element
-        elem = frame.locator('xpath=/html/body/div/div/div/div/div[2]/form/div/select').nth(0)
-        await asyncio.sleep(3); await elem.click()
-        
-        # -> Fill the title and amount fields with a unique description and submit the form to create the transaction.
-        frame = context.pages[-1]
-        # Input text
-        elem = frame.locator('xpath=/html/body/div/div/div/div/div[2]/form/div[3]/input').nth(0)
-        await asyncio.sleep(3); await elem.fill('Test cancel delete')
-        
-        frame = context.pages[-1]
-        # Input text
-        elem = frame.locator('xpath=/html/body/div/div/div/div/div[2]/form/div[4]/div/input').nth(0)
-        await asyncio.sleep(3); await elem.fill('1000')
-        
-        frame = context.pages[-1]
-        # Click element
-        elem = frame.locator('xpath=/html/body/div/div/div/div/div[2]/form/button').nth(0)
-        await asyncio.sleep(3); await elem.click()
-        
-        # -> Click the delete button for the 'Test cancel delete' transaction, dismiss the browser confirmation (Cancel/Escape), then verify the transaction still appears in the dashboard list and finish.
-        frame = context.pages[-1]
-        # Click element
-        elem = frame.locator('xpath=/html/body/div/div[4]/div/div/div[2]/table/tbody/tr/td[8]/div/form/button').nth(0)
-        await asyncio.sleep(3); await elem.click()
-        
-        # --> Test passed — verified by AI agent
-        frame = context.pages[-1]
-        current_url = await frame.evaluate("() => window.location.href")
-        assert current_url is not None, "Test completed successfully"
+        assert await frame.locator("xpath=//*[contains(., 'Test Transaction')]").nth(0).is_visible(), "The transaction 'Test Transaction' should still appear in the dashboard list after cancelling the deletion prompt."
         await asyncio.sleep(5)
 
     finally:

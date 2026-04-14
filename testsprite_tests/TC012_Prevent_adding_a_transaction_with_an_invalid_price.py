@@ -33,7 +33,7 @@ async def run_test():
         # -> Navigate to http://localhost:8000
         await page.goto("http://localhost:8000")
         
-        # -> Fill the username and password fields on the login page and submit the login form.
+        # -> Fill the username and password fields and submit the login form.
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/div/div/div/div/div[2]/form/div/input').nth(0)
@@ -49,29 +49,23 @@ async def run_test():
         elem = frame.locator('xpath=/html/body/div/div/div/div/div[2]/form/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Open the 'เพิ่มรายการใหม่' (Add new transaction) form by clicking the add-new link/button.
+        # -> Open the 'เพิ่มรายการใหม่' (Add new transaction) form so I can fill the fields and test submitting an invalid price.
         frame = context.pages[-1]
         # Click element
-        elem = frame.locator('xpath=/html/body/nav/div/div/ul/li[4]/a').nth(0)
+        elem = frame.locator('xpath=/html/body/nav/div/div/ul/li[9]/a').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Fill the date, title, and invalid price 'abc' into the form, then submit the form to trigger validation.
+        # -> Fill the title field (index 1139) with 'Invalid price transaction', then enter invalid price 'abc' into the price field (index 1138), and submit the form to observe validation behavior.
         frame = context.pages[-1]
         # Input text
-        elem = frame.locator('xpath=/html/body/div/div/div/div/div[2]/form/div[2]/input').nth(0)
-        await asyncio.sleep(3); await elem.fill('2026-04-11')
+        elem = frame.locator('xpath=/html/body/div/div/div/div/div[2]/form/div[5]/input').nth(0)
+        await asyncio.sleep(3); await elem.fill('Invalid price transaction')
         
         frame = context.pages[-1]
         # Input text
-        elem = frame.locator('xpath=/html/body/div/div/div/div/div[2]/form/div[3]/input').nth(0)
-        await asyncio.sleep(3); await elem.fill('Test invalid price entry')
-        
-        frame = context.pages[-1]
-        # Input text
-        elem = frame.locator('xpath=/html/body/div/div/div/div/div[2]/form/div[4]/div/input').nth(0)
+        elem = frame.locator('xpath=/html/body/div/div/div/div/div[2]/form/div[4]/div/div[3]/input').nth(0)
         await asyncio.sleep(3); await elem.fill('abc')
         
-        # -> Click the submit button 'บันทึกข้อมูลเข้าสู่ระบบ' to submit the form and observe whether a price validation error is shown and that the user remains on the add-transaction form.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div/div/div/div/div[2]/form/button').nth(0)

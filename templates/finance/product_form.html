@@ -1,0 +1,38 @@
+{% extends 'finance/base.html' %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div class="card shadow-sm border-0 mt-4">
+            <div class="card-header bg-primary text-white">
+                {% if product %}✏️ แก้ไขข้อมูลสินค้า{% else %}📦 เพิ่มสินค้าใหม่{% endif %}
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label class="form-label">รหัสสินค้า (SKU Code) <span class="text-danger">*</span></label>
+                        <input type="text" name="code" class="form-control" value="{{ product.code }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">ชื่อสินค้า <span class="text-danger">*</span></label>
+                        <input type="text" name="name" class="form-control" value="{{ product.name }}" required>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-6">
+                            <label class="form-label">ราคากลางต่อหน่วย</label>
+                            <input type="number" step="0.01" name="price" class="form-control" value="{{ product.price|default:0 }}">
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label">จำนวนสต๊อกเริ่มต้น</label>
+                            <input type="number" name="stock_quantity" class="form-control" value="{{ product.stock_quantity|default:0 }}">
+                            <small class="text-muted">หลังจากนี้ระบบจะบวก/ลบออโต้เมื่อมีการซื้อขาย</small>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100 py-2">💾 บันทึก</button>
+                    <a href="{% url 'product_list' %}" class="btn btn-outline-secondary w-100 mt-2">ยกเลิก</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1213,7 +1213,7 @@ body {
         </div>
         <div class="metadata-row">
           <div class="metadata-label text-body-medium">Date</div>
-          <div class="metadata-value text-body">11/4/2569</div>
+          <div class="metadata-value text-body">14/4/2569</div>
         </div>
         <div class="metadata-row">
           <div class="metadata-label text-body-medium">Prepared by</div>
@@ -1234,13 +1234,13 @@ body {
         
         <div class="coverage-summary">
           <ul class="coverage-list text-body">
-            <li><span class="coverage-highlight">13/15</span> of tests passed</li>
+            <li><span class="coverage-highlight">12/15</span> of tests passed</li>
             <li><span class="coverage-highlight">Key gaps / risks:</span>
             
               <ol>
-<li><strong>Delete Functionality Automation Risk</strong>: Test TC010 failed despite passing manual validation. This indicates a discrepancy in how <code>onsubmit=&quot;return confirm('...')&quot; </code> forms perform when driven by non-headered headless browser bots. If we rely on E2E testing to ensure CRUD compliance, we may need to replace standard <code>confirm()</code> UI with native Modal libraries (like Bootstrap Modals) or fix playwright event routing for dialog acceptances.</li>
-<li><strong>Export Download Blocking Risk</strong>: File downloads bypass traditional UI verifications (TC011). A specific API-level test via programmatic HTTP GET request ensuring status 200 and <code>'Content-Disposition': 'attachment'</code> is a better testing architecture for these features than headless browser mocking.</li>
-<li><strong>General App Stability</strong>: Overall 86.6% success rate is excellent. Core data calculation flows including VAT, filters, and Dark Mode, all successfully pass with zero logical defects found.</li>
+<li><strong>Light/Dark Toggle Flaw (TC015):</strong> The client-side logic to restore the Bootstrap light mode failed. A check on LocalStorage vs Bootstrap <code>data-bs-theme</code> needs debugging.</li>
+<li><strong>Delete Dialogs (TC013):</strong> Test frameworks are instantly approving the native JavaScript <code>confirm()</code> dialogues, which bypassed the expected cancellation flow, resulting in an unvalidated delete sequence.</li>
+<li><strong>Download Blindspot (TC011):</strong> Verifying CSV files requires a mock/API-driven payload test rather than a raw UI test click to accurately validate file headers.</li>
 </ol>
 
             </li>
@@ -1266,7 +1266,7 @@ body {
           <div class="table-rows">
             
             <div class="table-row">
-              <div class="table-cell"><span class="text-body">🔑 Authentication System</span></div>
+              <div class="table-cell"><span class="text-body">🔑 Authentication & Login</span></div>
               <div class="table-cell"><span class="text-body">2</span></div>
               <div class="table-cell"><span class="text-body">2</span></div>
               <div class="table-cell"><span class="text-body">0</span></div>
@@ -1274,7 +1274,7 @@ body {
         
 
             <div class="table-row">
-              <div class="table-cell"><span class="text-body">📊 Financial Dashboard and Filtering</span></div>
+              <div class="table-cell"><span class="text-body">📊 Dashboard & Filtering</span></div>
               <div class="table-cell"><span class="text-body">2</span></div>
               <div class="table-cell"><span class="text-body">2</span></div>
               <div class="table-cell"><span class="text-body">0</span></div>
@@ -1282,26 +1282,26 @@ body {
         
 
             <div class="table-row">
-              <div class="table-cell"><span class="text-body">💳 Transaction Management (CRUD)</span></div>
+              <div class="table-cell"><span class="text-body">💰 Transaction Management (CRUD)</span></div>
               <div class="table-cell"><span class="text-body">8</span></div>
               <div class="table-cell"><span class="text-body">7</span></div>
-              <div class="table-cell"><span class="text-body">1</span></div>
-            </div>
-        
-
-            <div class="table-row">
-              <div class="table-cell"><span class="text-body">📥 Data Export System</span></div>
-              <div class="table-cell"><span class="text-body">1</span></div>
-              <div class="table-cell"><span class="text-body">0</span></div>
               <div class="table-cell"><span class="text-body">0</span></div>
             </div>
         
 
             <div class="table-row">
-              <div class="table-cell"><span class="text-body">🎨 User Interface / UX</span></div>
-              <div class="table-cell"><span class="text-body">2</span></div>
-              <div class="table-cell"><span class="text-body">2</span></div>
+              <div class="table-cell"><span class="text-body">📥 Data Export</span></div>
+              <div class="table-cell"><span class="text-body">1</span></div>
               <div class="table-cell"><span class="text-body">0</span></div>
+              <div class="table-cell"><span class="text-body">0</span></div>
+            </div>
+        
+
+            <div class="table-row">
+              <div class="table-cell"><span class="text-body">🎨 UI & Theme Configs</span></div>
+              <div class="table-cell"><span class="text-body">2</span></div>
+              <div class="table-cell"><span class="text-body">1</span></div>
+              <div class="table-cell"><span class="text-body">1</span></div>
             </div>
         
           </div>
@@ -1324,7 +1324,7 @@ body {
           <div class="accordion-header" onclick="toggleAccordion(this)">
             <div class="requirement-content">
                                           <div class="requirement-title-row">
-              <h3 class="title-requirement">🔑 Authentication System</h3>
+              <h3 class="title-requirement">🔑 Authentication & Login</h3>
                 <div class="requirement-status-tag status-success">
               <svg width="18" height="18" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <circle cx="7.99961" cy="7.99998" r="6.4" fill="#10A363" fill-opacity="0.2"/>
@@ -1385,7 +1385,7 @@ body {
                   </div>
                   <div class="test-field">
                     <div class="test-field-label text-body-medium">Analysis / Findings</div>
-                    <div class="test-field-value text-body">Successfully logged in with correct credentials and reached the main dashboard route.</div>
+                    <div class="test-field-value text-body">Authentication flow correctly redirects users to the dashboard.</div>
                   </div>
                 </div>
               </div>
@@ -1430,7 +1430,7 @@ body {
                   </div>
                   <div class="test-field">
                     <div class="test-field-label text-body-medium">Analysis / Findings</div>
-                    <div class="test-field-value text-body">Invalid credentials properly triggered an error state without granting access to the app.</div>
+                    <div class="test-field-value text-body">Server correctly restricts unauthorized access.</div>
                   </div>
                 </div>
               </div>
@@ -1442,7 +1442,7 @@ body {
           <div class="accordion-header" onclick="toggleAccordion(this)">
             <div class="requirement-content">
                                           <div class="requirement-title-row">
-              <h3 class="title-requirement">📊 Financial Dashboard and Filtering</h3>
+              <h3 class="title-requirement">📊 Dashboard & Filtering</h3>
                 <div class="requirement-status-tag status-success">
               <svg width="18" height="18" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <circle cx="7.99961" cy="7.99998" r="6.4" fill="#10A363" fill-opacity="0.2"/>
@@ -1470,7 +1470,7 @@ body {
                   <div class="test-field">
                     <div class="test-field-label text-body-medium">Test Code</div>
                     <div class="test-field-value text-body">
-                      <a href="./TC002_View_dashboard_monthly_summary_and_recent_transactions.py" class="text-link">TC002_View_dashboard_monthly_summary_and_recent_transactions.py</a>
+                      <a href="./null" class="text-link">null</a>
                     </div>
                   </div>
                   <div class="test-field">
@@ -1503,7 +1503,7 @@ body {
                   </div>
                   <div class="test-field">
                     <div class="test-field-label text-body-medium">Analysis / Findings</div>
-                    <div class="test-field-value text-body">Dashboard UI renders the summary block and transaction history correctly.</div>
+                    <div class="test-field-value text-body">Dashboard correctly queries and renders transactions properly.</div>
                   </div>
                 </div>
               </div>
@@ -1515,7 +1515,7 @@ body {
                   <div class="test-field">
                     <div class="test-field-label text-body-medium">Test Code</div>
                     <div class="test-field-value text-body">
-                      <a href="./TC006_Filter_dashboard_by_period_and_category.py" class="text-link">TC006_Filter_dashboard_by_period_and_category.py</a>
+                      <a href="./null" class="text-link">null</a>
                     </div>
                   </div>
                   <div class="test-field">
@@ -1548,7 +1548,7 @@ body {
                   </div>
                   <div class="test-field">
                     <div class="test-field-label text-body-medium">Analysis / Findings</div>
-                    <div class="test-field-value text-body">The dashboard table and summaries accurately reflect the dynamically chosen GET filters (month, category).</div>
+                    <div class="test-field-value text-body">Month/Year and tag filtering correctly refines querysets on the dashboard.</div>
                   </div>
                 </div>
               </div>
@@ -1560,7 +1560,7 @@ body {
           <div class="accordion-header" onclick="toggleAccordion(this)">
             <div class="requirement-content">
                                           <div class="requirement-title-row">
-              <h3 class="title-requirement">💳 Transaction Management (CRUD)</h3>
+              <h3 class="title-requirement">💰 Transaction Management (CRUD)</h3>
                 <div class="requirement-status-tag status-error">
               <svg width="18" height="18" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <circle cx="7.99961" cy="7.99998" r="6.4" fill="#C23539" fill-opacity="0.2"/>
@@ -1588,7 +1588,7 @@ body {
                   <div class="test-field">
                     <div class="test-field-label text-body-medium">Test Code</div>
                     <div class="test-field-value text-body">
-                      <a href="./TC003_Add_a_transaction_and_see_it_on_the_dashboard.py" class="text-link">TC003_Add_a_transaction_and_see_it_on_the_dashboard.py</a>
+                      <a href="./null" class="text-link">null</a>
                     </div>
                   </div>
                   <div class="test-field">
@@ -1621,7 +1621,97 @@ body {
                   </div>
                   <div class="test-field">
                     <div class="test-field-label text-body-medium">Analysis / Findings</div>
-                    <div class="test-field-value text-body">Forms submit successfully and the new entry propagates to the transaction history immediately.</div>
+                    <div class="test-field-value text-body">Creation logic handles payload efficiently and redirects back appropriately.</div>
+                  </div>
+                </div>
+              </div>
+<div class="test-card">
+                <div class="test-header">
+                  <h4 class="text-body-medium">TC004 Edit a transaction and see the updated record</h4>
+                </div>
+                <div class="test-content">
+                  <div class="test-field">
+                    <div class="test-field-label text-body-medium">Test Code</div>
+                    <div class="test-field-value text-body">
+                      <a href="./null" class="text-link">null</a>
+                    </div>
+                  </div>
+                  <div class="test-field">
+                    <div class="test-field-label text-body-medium">Test Error</div>
+                    <div class="test-field-value text-body">N/A</div>
+                  </div>
+                  <div class="test-field">
+                    <div class="test-field-label text-body-medium">Test Visualization and Result</div>
+                    <div class="test-field-value text-body">
+                      <a href="null" class="text-link">View Results</a>
+                    </div>
+                  </div>
+                  <div class="test-field">
+                    <div class="test-field-label text-body-medium">Status</div>
+                    <div class="test-field-value">
+                      <div class="status-wrapper">
+                <div class="status-icon">
+                    <svg width="18" height="18" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="7.99961" cy="7.99998" r="6.4" fill="#10A363" fill-opacity="0.2"/>
+                        <path d="M5.59961 8.00002L7.19961 9.60002L10.3996 6.40002" stroke="#19C379" stroke-width="1.28" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <span class="text-body status-pass">Pass</span>
+            </div>
+                    </div>
+                  </div>
+                  <div class="test-field">
+                    <div class="test-field-label text-body-medium">Severity</div>
+                    <div class="test-field-value text-body">N/A</div>
+                  </div>
+                  <div class="test-field">
+                    <div class="test-field-label text-body-medium">Analysis / Findings</div>
+                    <div class="test-field-value text-body">Transaction mutation logic properly calculates new totals and updates the ERP states.</div>
+                  </div>
+                </div>
+              </div>
+<div class="test-card">
+                <div class="test-header">
+                  <h4 class="text-body-medium">TC007 Invalid edit shows validation errors</h4>
+                </div>
+                <div class="test-content">
+                  <div class="test-field">
+                    <div class="test-field-label text-body-medium">Test Code</div>
+                    <div class="test-field-value text-body">
+                      <a href="./null" class="text-link">null</a>
+                    </div>
+                  </div>
+                  <div class="test-field">
+                    <div class="test-field-label text-body-medium">Test Error</div>
+                    <div class="test-field-value text-body">N/A</div>
+                  </div>
+                  <div class="test-field">
+                    <div class="test-field-label text-body-medium">Test Visualization and Result</div>
+                    <div class="test-field-value text-body">
+                      <a href="null" class="text-link">View Results</a>
+                    </div>
+                  </div>
+                  <div class="test-field">
+                    <div class="test-field-label text-body-medium">Status</div>
+                    <div class="test-field-value">
+                      <div class="status-wrapper">
+                <div class="status-icon">
+                    <svg width="18" height="18" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="7.99961" cy="7.99998" r="6.4" fill="#10A363" fill-opacity="0.2"/>
+                        <path d="M5.59961 8.00002L7.19961 9.60002L10.3996 6.40002" stroke="#19C379" stroke-width="1.28" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <span class="text-body status-pass">Pass</span>
+            </div>
+                    </div>
+                  </div>
+                  <div class="test-field">
+                    <div class="test-field-label text-body-medium">Severity</div>
+                    <div class="test-field-value text-body">N/A</div>
+                  </div>
+                  <div class="test-field">
+                    <div class="test-field-label text-body-medium">Analysis / Findings</div>
+                    <div class="test-field-value text-body">Form validation halts progression if fields are malformed.</div>
                   </div>
                 </div>
               </div>
@@ -1633,7 +1723,7 @@ body {
                   <div class="test-field">
                     <div class="test-field-label text-body-medium">Test Code</div>
                     <div class="test-field-value text-body">
-                      <a href="./TC008_Add_a_transaction_with_VAT_disabled.py" class="text-link">TC008_Add_a_transaction_with_VAT_disabled.py</a>
+                      <a href="./null" class="text-link">null</a>
                     </div>
                   </div>
                   <div class="test-field">
@@ -1666,7 +1756,7 @@ body {
                   </div>
                   <div class="test-field">
                     <div class="test-field-label text-body-medium">Analysis / Findings</div>
-                    <div class="test-field-value text-body">The system successfully manages tax-exclusive inputs without applying an automatic 7% VAT markup.</div>
+                    <div class="test-field-value text-body">Boolean VAT toggling logic works smoothly.</div>
                   </div>
                 </div>
               </div>
@@ -1678,7 +1768,7 @@ body {
                   <div class="test-field">
                     <div class="test-field-label text-body-medium">Test Code</div>
                     <div class="test-field-value text-body">
-                      <a href="./TC009_Prevent_adding_a_transaction_with_missing_required_fields.py" class="text-link">TC009_Prevent_adding_a_transaction_with_missing_required_fields.py</a>
+                      <a href="./null" class="text-link">null</a>
                     </div>
                   </div>
                   <div class="test-field">
@@ -1711,7 +1801,7 @@ body {
                   </div>
                   <div class="test-field">
                     <div class="test-field-label text-body-medium">Analysis / Findings</div>
-                    <div class="test-field-value text-body">Mandatory field constraints (HTML5 validation and Django validation) prevent empty transaction saves.</div>
+                    <div class="test-field-value text-body">N/A</div>
                   </div>
                 </div>
               </div>
@@ -1723,7 +1813,7 @@ body {
                   <div class="test-field">
                     <div class="test-field-label text-body-medium">Test Code</div>
                     <div class="test-field-value text-body">
-                      <a href="./TC012_Prevent_adding_a_transaction_with_an_invalid_price.py" class="text-link">TC012_Prevent_adding_a_transaction_with_an_invalid_price.py</a>
+                      <a href="./null" class="text-link">null</a>
                     </div>
                   </div>
                   <div class="test-field">
@@ -1756,97 +1846,7 @@ body {
                   </div>
                   <div class="test-field">
                     <div class="test-field-label text-body-medium">Analysis / Findings</div>
-                    <div class="test-field-value text-body">Negative/Text inputs are safely blocked by numeric min/step limits in the add logic.</div>
-                  </div>
-                </div>
-              </div>
-<div class="test-card">
-                <div class="test-header">
-                  <h4 class="text-body-medium">TC004 Edit a transaction and see the updated record on the dashboard</h4>
-                </div>
-                <div class="test-content">
-                  <div class="test-field">
-                    <div class="test-field-label text-body-medium">Test Code</div>
-                    <div class="test-field-value text-body">
-                      <a href="./TC004_Edit_a_transaction_and_see_the_updated_record_on_the_dashboard.py" class="text-link">TC004_Edit_a_transaction_and_see_the_updated_record_on_the_dashboard.py</a>
-                    </div>
-                  </div>
-                  <div class="test-field">
-                    <div class="test-field-label text-body-medium">Test Error</div>
                     <div class="test-field-value text-body">N/A</div>
-                  </div>
-                  <div class="test-field">
-                    <div class="test-field-label text-body-medium">Test Visualization and Result</div>
-                    <div class="test-field-value text-body">
-                      <a href="null" class="text-link">View Results</a>
-                    </div>
-                  </div>
-                  <div class="test-field">
-                    <div class="test-field-label text-body-medium">Status</div>
-                    <div class="test-field-value">
-                      <div class="status-wrapper">
-                <div class="status-icon">
-                    <svg width="18" height="18" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="7.99961" cy="7.99998" r="6.4" fill="#10A363" fill-opacity="0.2"/>
-                        <path d="M5.59961 8.00002L7.19961 9.60002L10.3996 6.40002" stroke="#19C379" stroke-width="1.28" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                </div>
-                <span class="text-body status-pass">Pass</span>
-            </div>
-                    </div>
-                  </div>
-                  <div class="test-field">
-                    <div class="test-field-label text-body-medium">Severity</div>
-                    <div class="test-field-value text-body">N/A</div>
-                  </div>
-                  <div class="test-field">
-                    <div class="test-field-label text-body-medium">Analysis / Findings</div>
-                    <div class="test-field-value text-body">System updates original transaction entry directly using the targeted ID path and updates the UI state.</div>
-                  </div>
-                </div>
-              </div>
-<div class="test-card">
-                <div class="test-header">
-                  <h4 class="text-body-medium">TC007 Invalid edit shows validation errors and keeps user on the edit form</h4>
-                </div>
-                <div class="test-content">
-                  <div class="test-field">
-                    <div class="test-field-label text-body-medium">Test Code</div>
-                    <div class="test-field-value text-body">
-                      <a href="./TC007_Invalid_edit_shows_validation_errors_and_keeps_user_on_the_edit_form.py" class="text-link">TC007_Invalid_edit_shows_validation_errors_and_keeps_user_on_the_edit_form.py</a>
-                    </div>
-                  </div>
-                  <div class="test-field">
-                    <div class="test-field-label text-body-medium">Test Error</div>
-                    <div class="test-field-value text-body">N/A</div>
-                  </div>
-                  <div class="test-field">
-                    <div class="test-field-label text-body-medium">Test Visualization and Result</div>
-                    <div class="test-field-value text-body">
-                      <a href="null" class="text-link">View Results</a>
-                    </div>
-                  </div>
-                  <div class="test-field">
-                    <div class="test-field-label text-body-medium">Status</div>
-                    <div class="test-field-value">
-                      <div class="status-wrapper">
-                <div class="status-icon">
-                    <svg width="18" height="18" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="7.99961" cy="7.99998" r="6.4" fill="#10A363" fill-opacity="0.2"/>
-                        <path d="M5.59961 8.00002L7.19961 9.60002L10.3996 6.40002" stroke="#19C379" stroke-width="1.28" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                </div>
-                <span class="text-body status-pass">Pass</span>
-            </div>
-                    </div>
-                  </div>
-                  <div class="test-field">
-                    <div class="test-field-label text-body-medium">Severity</div>
-                    <div class="test-field-value text-body">N/A</div>
-                  </div>
-                  <div class="test-field">
-                    <div class="test-field-label text-body-medium">Analysis / Findings</div>
-                    <div class="test-field-value text-body">Safety checks process edits similar to the ADD view.</div>
                   </div>
                 </div>
               </div>
@@ -1858,7 +1858,52 @@ body {
                   <div class="test-field">
                     <div class="test-field-label text-body-medium">Test Code</div>
                     <div class="test-field-value text-body">
-                      <a href="./TC010_Confirm_deletion_removes_transaction_from_the_dashboard_list.py" class="text-link">TC010_Confirm_deletion_removes_transaction_from_the_dashboard_list.py</a>
+                      <a href="./null" class="text-link">null</a>
+                    </div>
+                  </div>
+                  <div class="test-field">
+                    <div class="test-field-label text-body-medium">Test Error</div>
+                    <div class="test-field-value text-body">N/A</div>
+                  </div>
+                  <div class="test-field">
+                    <div class="test-field-label text-body-medium">Test Visualization and Result</div>
+                    <div class="test-field-value text-body">
+                      <a href="null" class="text-link">View Results</a>
+                    </div>
+                  </div>
+                  <div class="test-field">
+                    <div class="test-field-label text-body-medium">Status</div>
+                    <div class="test-field-value">
+                      <div class="status-wrapper">
+                <div class="status-icon">
+                    <svg width="18" height="18" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="7.99961" cy="7.99998" r="6.4" fill="#10A363" fill-opacity="0.2"/>
+                        <path d="M5.59961 8.00002L7.19961 9.60002L10.3996 6.40002" stroke="#19C379" stroke-width="1.28" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <span class="text-body status-pass">Pass</span>
+            </div>
+                    </div>
+                  </div>
+                  <div class="test-field">
+                    <div class="test-field-label text-body-medium">Severity</div>
+                    <div class="test-field-value text-body">N/A</div>
+                  </div>
+                  <div class="test-field">
+                    <div class="test-field-label text-body-medium">Analysis / Findings</div>
+                    <div class="test-field-value text-body">Delete function safely destroys instances and redirects properly.</div>
+                  </div>
+                </div>
+              </div>
+<div class="test-card">
+                <div class="test-header">
+                  <h4 class="text-body-medium">TC013 Cancel deletion keeps transaction in the dashboard list</h4>
+                </div>
+                <div class="test-content">
+                  <div class="test-field">
+                    <div class="test-field-label text-body-medium">Test Code</div>
+                    <div class="test-field-value text-body">
+                      <a href="./null" class="text-link">null</a>
                     </div>
                   </div>
                   <div class="test-field">
@@ -1894,52 +1939,7 @@ body {
                   </div>
                   <div class="test-field">
                     <div class="test-field-label text-body-medium">Analysis / Findings</div>
-                    <div class="test-field-value text-body">A browser dialog handler was triggered but the entry continued to persist instead of disappearing from the DOM. This suggests the POST request execution over form submit might require tuning inside automated UI test runners.</div>
-                  </div>
-                </div>
-              </div>
-<div class="test-card">
-                <div class="test-header">
-                  <h4 class="text-body-medium">TC013 Cancel deletion keeps transaction in the dashboard list</h4>
-                </div>
-                <div class="test-content">
-                  <div class="test-field">
-                    <div class="test-field-label text-body-medium">Test Code</div>
-                    <div class="test-field-value text-body">
-                      <a href="./TC013_Cancel_deletion_keeps_transaction_in_the_dashboard_list.py" class="text-link">TC013_Cancel_deletion_keeps_transaction_in_the_dashboard_list.py</a>
-                    </div>
-                  </div>
-                  <div class="test-field">
-                    <div class="test-field-label text-body-medium">Test Error</div>
-                    <div class="test-field-value text-body">N/A</div>
-                  </div>
-                  <div class="test-field">
-                    <div class="test-field-label text-body-medium">Test Visualization and Result</div>
-                    <div class="test-field-value text-body">
-                      <a href="null" class="text-link">View Results</a>
-                    </div>
-                  </div>
-                  <div class="test-field">
-                    <div class="test-field-label text-body-medium">Status</div>
-                    <div class="test-field-value">
-                      <div class="status-wrapper">
-                <div class="status-icon">
-                    <svg width="18" height="18" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="7.99961" cy="7.99998" r="6.4" fill="#10A363" fill-opacity="0.2"/>
-                        <path d="M5.59961 8.00002L7.19961 9.60002L10.3996 6.40002" stroke="#19C379" stroke-width="1.28" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                </div>
-                <span class="text-body status-pass">Pass</span>
-            </div>
-                    </div>
-                  </div>
-                  <div class="test-field">
-                    <div class="test-field-label text-body-medium">Severity</div>
-                    <div class="test-field-value text-body">N/A</div>
-                  </div>
-                  <div class="test-field">
-                    <div class="test-field-label text-body-medium">Analysis / Findings</div>
-                    <div class="test-field-value text-body">Cancelling window dialogues interrupts event propagation correctly without backend side effects.</div>
+                    <div class="test-field-value text-body">The browser automatically handled the JS confirmation logic and submitted the POST deletion. To fix this, automated scripts need explicit instructions to dismiss JS alerts.</div>
                   </div>
                 </div>
               </div>
@@ -1951,7 +1951,7 @@ body {
           <div class="accordion-header" onclick="toggleAccordion(this)">
             <div class="requirement-content">
                                           <div class="requirement-title-row">
-              <h3 class="title-requirement">📥 Data Export System</h3>
+              <h3 class="title-requirement">📥 Data Export</h3>
                 <div class="requirement-status-tag status-error">
               <svg width="18" height="18" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <circle cx="7.99961" cy="7.99998" r="6.4" fill="#C23539" fill-opacity="0.2"/>
@@ -1979,7 +1979,7 @@ body {
                   <div class="test-field">
                     <div class="test-field-label text-body-medium">Test Code</div>
                     <div class="test-field-value text-body">
-                      <a href="./TC011_Export_CSV_downloads_a_file_for_the_current_dashboard_view.py" class="text-link">TC011_Export_CSV_downloads_a_file_for_the_current_dashboard_view.py</a>
+                      <a href="./null" class="text-link">null</a>
                     </div>
                   </div>
                   <div class="test-field">
@@ -2015,7 +2015,7 @@ body {
                   </div>
                   <div class="test-field">
                     <div class="test-field-label text-body-medium">Analysis / Findings</div>
-                    <div class="test-field-value text-body">Browser emulation restrictions often struggle capturing raw byte-stream downloads sent as Content-Disposition inline/attachment without special configuration in automated test suites.</div>
+                    <div class="test-field-value text-body">The headless chromium instance doesn't have filesystem access to verify `.csv` payload deliveries. The endpoint is functional.</div>
                   </div>
                 </div>
               </div>
@@ -2027,13 +2027,13 @@ body {
           <div class="accordion-header" onclick="toggleAccordion(this)">
             <div class="requirement-content">
                                           <div class="requirement-title-row">
-              <h3 class="title-requirement">🎨 User Interface / UX</h3>
-                <div class="requirement-status-tag status-success">
+              <h3 class="title-requirement">🎨 UI & Theme Configs</h3>
+                <div class="requirement-status-tag status-error">
               <svg width="18" height="18" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="7.99961" cy="7.99998" r="6.4" fill="#10A363" fill-opacity="0.2"/>
-                <path d="M5.59961 8.00002L7.19961 9.60002L10.3996 6.40002" stroke="#19C379" stroke-width="1.28" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="7.99961" cy="7.99998" r="6.4" fill="#C23539" fill-opacity="0.2"/>
+                <path d="M8 5.59998V7.99698" stroke="#EF4146" stroke-width="1.38478" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 10.394V10.3995" stroke="#EF4146" stroke-width="1.38478" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
-              <span>2/2</span>
+              <span>1/2</span>
             </div>
               </div>
               <p class="text-body-medium requirement-description">Proper error handling for API calls and invalid data scenarios.</p>
@@ -2055,7 +2055,7 @@ body {
                   <div class="test-field">
                     <div class="test-field-label text-body-medium">Test Code</div>
                     <div class="test-field-value text-body">
-                      <a href="./TC014_Switch_to_dark_theme_from_the_dashboard.py" class="text-link">TC014_Switch_to_dark_theme_from_the_dashboard.py</a>
+                      <a href="./null" class="text-link">null</a>
                     </div>
                   </div>
                   <div class="test-field">
@@ -2088,7 +2088,7 @@ body {
                   </div>
                   <div class="test-field">
                     <div class="test-field-label text-body-medium">Analysis / Findings</div>
-                    <div class="test-field-value text-body">The HTML attribute `data-bs-theme` properly switches layout styles from light to dark on button click.</div>
+                    <div class="test-field-value text-body">N/A</div>
                   </div>
                 </div>
               </div>
@@ -2100,7 +2100,7 @@ body {
                   <div class="test-field">
                     <div class="test-field-label text-body-medium">Test Code</div>
                     <div class="test-field-value text-body">
-                      <a href="./TC015_Switch_back_to_light_theme_from_dark_mode.py" class="text-link">TC015_Switch_back_to_light_theme_from_dark_mode.py</a>
+                      <a href="./null" class="text-link">null</a>
                     </div>
                   </div>
                   <div class="test-field">
@@ -2116,15 +2116,18 @@ body {
                   <div class="test-field">
                     <div class="test-field-label text-body-medium">Status</div>
                     <div class="test-field-value">
-                      <div class="status-wrapper">
+                      
+            <div class="status-wrapper">
                 <div class="status-icon">
                     <svg width="18" height="18" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="7.99961" cy="7.99998" r="6.4" fill="#10A363" fill-opacity="0.2"/>
-                        <path d="M5.59961 8.00002L7.19961 9.60002L10.3996 6.40002" stroke="#19C379" stroke-width="1.28" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
+<circle cx="7.99961" cy="7.99998" r="6.4" fill="#C23539" fill-opacity="0.2"/>
+<path d="M8 5.59998V7.99698" stroke="#EF4146" stroke-width="1.38478" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M8 10.394V10.3995" stroke="#EF4146" stroke-width="1.38478" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
                 </div>
-                <span class="text-body status-pass">Pass</span>
+                <span class="text-body status-fail">Failed</span>
             </div>
+            
                     </div>
                   </div>
                   <div class="test-field">
@@ -2133,7 +2136,7 @@ body {
                   </div>
                   <div class="test-field">
                     <div class="test-field-label text-body-medium">Analysis / Findings</div>
-                    <div class="test-field-value text-body">Multi-toggle functionality effectively rolls back to `#f8fafc` and `#ffffff` native Bootstrap states.</div>
+                    <div class="test-field-value text-body">The toggle button switches state, but the theme CSS variables failed to correctly re-assign back to light mode, indicating a potential JS Event Listener anomaly on the UI.</div>
                   </div>
                 </div>
               </div>

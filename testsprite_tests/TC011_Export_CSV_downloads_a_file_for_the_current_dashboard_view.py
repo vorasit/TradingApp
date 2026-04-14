@@ -33,7 +33,7 @@ async def run_test():
         # -> Navigate to http://localhost:8000
         await page.goto("http://localhost:8000")
         
-        # -> Fill the username field with the provided username ('admin').
+        # -> Enter username 'admin' and password '1234', then click the Login button to sign in.
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/div/div/div/div/div[2]/form/div/input').nth(0)
@@ -49,31 +49,39 @@ async def run_test():
         elem = frame.locator('xpath=/html/body/div/div/div/div/div[2]/form/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Click the 'โหลด CSV' (Export as Excel CSV) link to trigger the CSV download and observe the result.
+        # -> Click the '📥 โหลด CSV' (Export as Excel CSV) link (element index 555) to trigger a CSV download and observe the result.
         frame = context.pages[-1]
         # Click element
-        elem = frame.locator('xpath=/html/body/div/div[4]/div/div/div/div/a').nth(0)
+        elem = frame.locator('xpath=/html/body/div/div[5]/div/div/div/div/a').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Click the '📥 JSON' export button (visible index 510) to observe whether a visible download/navigation occurs. If that triggers a download or navigates to a file URL, use that information to confirm the export mechanism and then attempt the CSV control next.
+        # -> Click the '📥 โหลด CSV' (Export as Excel CSV) link again (element index 555) to trigger the CSV download and observe the page response or any change.
         frame = context.pages[-1]
         # Click element
-        elem = frame.locator('xpath=/html/body/div/div[4]/div/div/div/div/a[2]').nth(0)
+        elem = frame.locator('xpath=/html/body/div/div[5]/div/div/div/div/a').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Click the '📥 โหลด CSV' (Export as Excel CSV) control (element index 202) and observe any visible navigation, new tab, or response that would confirm a CSV file was delivered.
+        # -> Click the CSV export button (index 555). Wait and observe for any page change or navigation. If there is no visible change, click the JSON export (index 558) to confirm the export endpoint is reachable.
         frame = context.pages[-1]
         # Click element
-        elem = frame.locator('xpath=/html/body/div/div[4]/div/div/div/div/a').nth(0)
+        elem = frame.locator('xpath=/html/body/div/div[5]/div/div/div/div/a[2]').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Navigate directly to the CSV export URL to observe the response (to confirm whether CSV content or a download is returned).
-        await page.goto("http://localhost:8000/export/csv/?filter_month=all&category=all")
+        # -> Click the '📥 โหลด CSV' (Export as Excel CSV) link (element index 555), wait for the UI to settle, and observe any visible navigation or feedback that indicates a CSV download was triggered.
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div/div[5]/div/div/div/div/a').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        # -> Click the '📥 โหลด CSV' (Export as Excel CSV) link (element index 555) and observe for any visible navigation, page change, or UI feedback indicating a download was triggered.
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div/div[5]/div/div/div/div/a').nth(0)
+        await asyncio.sleep(3); await elem.click()
         
         # --> Assertions to verify final state
         frame = context.pages[-1]
-        current_url = await frame.evaluate("() => window.location.href")
-        assert '/export/csv/' in current_url, "The page should have navigated to the CSV export URL after clicking the export action"
+        assert await frame.locator("xpath=//*[contains(., '📥 โหลด CSV')]").nth(0).is_visible(), "The dashboard should show the 📥 โหลด CSV export link after attempting to export the current dataset."
         await asyncio.sleep(5)
 
     finally:

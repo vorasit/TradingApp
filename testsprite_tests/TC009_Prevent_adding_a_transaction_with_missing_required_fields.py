@@ -33,7 +33,7 @@ async def run_test():
         # -> Navigate to http://localhost:8000
         await page.goto("http://localhost:8000")
         
-        # -> Fill the login form with provided credentials and submit to access the application.
+        # -> Fill username and password, then submit the login form.
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/div/div/div/div/div[2]/form/div/input').nth(0)
@@ -49,13 +49,13 @@ async def run_test():
         elem = frame.locator('xpath=/html/body/div/div/div/div/div[2]/form/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Open the add-transaction form by clicking the '+ เพิ่มรายการใหม่' control.
+        # -> Click the '+ เพิ่มรายการใหม่' link to open the add transaction form and observe the form fields.
         frame = context.pages[-1]
         # Click element
-        elem = frame.locator('xpath=/html/body/nav/div/div/ul/li[4]/a').nth(0)
+        elem = frame.locator('xpath=/html/body/nav/div/div/ul/li[9]/a').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Click the 'บันทึกข้อมูลเข้าสู่ระบบ' (Save) button to attempt to submit the form with required fields left empty, then check for validation errors and that the form remains on the add-transaction page.
+        # -> Click the submit button to submit the add-transaction form with required fields left empty and then verify validation errors are shown and the user remains on the add-transaction form.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div/div/div/div/div[2]/form/button').nth(0)

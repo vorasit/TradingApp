@@ -57,7 +57,17 @@
         <div class="row mb-4">
             <div class="col-6">
                 <strong>ลูกค้า / ผู้ชำระเงิน:</strong><br>
-                <span>(เงินสด/ทั่วไป)</span>
+                {% if transaction.contact %}
+                    <span style="font-size: 1.1em; font-weight: 600;">{{ transaction.contact.name }}</span><br>
+                    {% if transaction.contact.address %}
+                        <span style="font-size: 0.9em;">ที่อยู่: {{ transaction.contact.address }}</span><br>
+                    {% endif %}
+                    {% if transaction.contact.tax_id %}
+                        <span style="font-size: 0.9em;">เลขประจำตัวผู้เสียภาษี: {{ transaction.contact.tax_id }}</span>
+                    {% endif %}
+                {% else %}
+                    <span>(ขายสด / บุคคลทั่วไป)</span>
+                {% endif %}
             </div>
             <div class="col-6 text-end">
                 <strong>เลขที่อ้างอิง (No.):</strong> INV-{{ transaction.id|stringformat:"05d" }}<br>

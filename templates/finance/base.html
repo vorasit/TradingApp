@@ -55,8 +55,23 @@
                         <a class="nav-link" href="{% url 'dashboard' %}">หน้าหลัก (Dashboard)</a>
                     </li>
                     {% if user.is_authenticated %}
-                    <li class="nav-item d-flex align-items-center me-3">
-                        <span class="text-white-50 ms-2 text-nowrap">👤 {{ user.username }}</span>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'quotation_list' %}">📄 ใบเสนอราคา</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'product_list' %}">📦 คลังสินค้า</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'contact_list' %}">👥 ลูกค้า/คู่ค้า</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'executive_analytics' %}">👑 บอร์ดผู้บริหาร</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'import_csv' %}">📥 นำเข้า CSV</a>
+                    </li>
+                    <li class="nav-item d-flex align-items-center me-3 ms-2">
+                        <span class="text-white-50 text-nowrap">👤 {{ user.username }}</span>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link btn btn-primary px-3 text-white me-2" href="{% url 'add_transaction' %}">+ เพิ่มรายการใหม่</a>

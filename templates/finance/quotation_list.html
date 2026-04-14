@@ -1,0 +1,89 @@
+{% extends 'finance/base.html' %}
+{% load humanize %}
+{% block content %}
+<div class="row">
+    <div class="col-12 mb-4 d-flex justify-content-between align-items-center">
+        <h3>📝 ใบเสนอราคา / เอกสารรออนุมัติ (Quotations & PO)</h3>
+        <a href="{% url 'add_quotation' %}" class="btn btn-primary">+ สร้างฉบับร่างใหม่</a>
+    </div>
+    {% if messages %}
+        <div class="col-12">
+        {% for msg in messages %}
+            <div class="alert alert-{{ msg.tags }}">{{ msg }}</div>
+        {% endfor %}
+        </div>
+    {% endif %}
+</div>
+
+<div class="card shadow-sm border-0">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>เอกสารอ้างอิง</th>
+                    <th>สถานะเอกสาร</th>
+                    <th>ประเภท</th>
+                    <th>ชื่อรายการ / ลูกค้า</th>
+                    <th class="text-end">ยอดเงิน</th>
+                    <th class="text-center">จัดการเครื่องมือ</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for q in quotations %}
+                <tr>
+                    <td><strong>QT-{{ q.id|stringformat:"04d" }}</strong><br><small class="text-muted">{{ q.date|date:"d M Y" }}</small></td>
+                    <td>
+                        {% if q.is_converted %}
+                            <span class="badge bg-success">🔗 แปลงเป็นบิลแล้ว</span>
+                        {% elif q.status == 'APPROVED' %}
+                            <span class="badge bg-primary">✅ อนุมัติแล้ว (รอแปลง)</span>
+                        {% elif q.status == 'REJECTED' %}
+                            <span class="badge bg-danger">❌ ไม่อนุมัติ</span>
+                        {% else %}
+                            <span class="badge bg-secondary">📄 ฉบับร่าง (DRAFT)</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if q.transaction_type == 'SELL' %}<span class="badge bg-info text-dark">เสนอราคาขาย</span>
+                        {% else %}<span class="badge bg-warning text-dark">เสนอสั่งซื้อ</span>{% endif %}
+                    </td>
+                    <td>
+                        {{ q.title }}
+                        {% if q.contact %}<br><small class="text-muted"><i class="bi bi-person"></i> {{ q.contact.name }}</small>{% endif %}
+                    </td>
+                    <td class="text-end">
+                        {% if q.currency != 'THB' %}
+                            <span class="text-muted">{{ q.foreign_price|intcomma }} {{ q.currency }}</span><br>
+                        {% endif %}
+                        <strong>{{ q.total_price|intcomma }} ฿</strong>
+                    </td>
+                    <td class="text-center">
+                        <div class="d-flex justify-content-center gap-1">
+                            {% if not q.is_converted %}
+                                {% if q.status == 'APPROVED' %}
+                                    <form action="{% url 'convert_quotation' q.id %}" method="POST" class="d-inline">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-sm btn-success" title="แปลงลงระบบจริง">กดแปลงบิล</button>
+                                    </form>
+                                {% endif %}
+                                <a href="{% url 'edit_quotation' q.id %}" class="btn btn-sm btn-outline-primary" title="แก้ไข">✏️</a>
+                                {% if request.user.is_superuser %}
+                                <form action="{% url 'delete_quotation' q.id %}" method="POST" class="d-inline" onsubmit="return confirm('ลบเอกสารร่างนี้ทิ้งถาวร?');">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-sm btn-outline-danger" title="ลบ">🗑️</button>
+                                </form>
+                                {% endif %}
+                            {% else %}
+                                <span class="text-success small">อ้างอิงและล็อกชั่วคราวแล้ว</span>
+                            {% endif %}
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="6" class="text-center py-4">ยังไม่มีเอกสารร่าง</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

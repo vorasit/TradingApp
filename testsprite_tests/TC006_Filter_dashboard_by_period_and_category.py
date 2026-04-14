@@ -33,7 +33,7 @@ async def run_test():
         # -> Navigate to http://localhost:8000
         await page.goto("http://localhost:8000")
         
-        # -> Fill the username field with 'admin' (index 5), then fill the password with '1234' (index 7), then submit the form (click index 13).
+        # -> Fill the username and password, then submit the login form to authenticate the user.
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/div/div/div/div/div[2]/form/div/input').nth(0)
@@ -49,10 +49,10 @@ async def run_test():
         elem = frame.locator('xpath=/html/body/div/div/div/div/div[2]/form/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Click the filter button (index 339) to apply the selected period and category, then verify the dashboard summary and transaction list reflect the selected filters.
+        # -> Click the '🔍 กรองข้อมูล' (Apply filters) button to apply the selected period and category, then verify the transaction list and summary update accordingly.
         frame = context.pages[-1]
         # Click element
-        elem = frame.locator('xpath=/html/body/div/div[2]/div/form/div/div[3]/button').nth(0)
+        elem = frame.locator('xpath=/html/body/div/div[2]/div/form/div/div[4]/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
         # --> Test passed — verified by AI agent

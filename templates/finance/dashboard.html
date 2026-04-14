@@ -3,6 +3,11 @@
 {% block content %}
 <div class="row">
     <div class="col-12 mb-4">
+        {% if messages %}
+            {% for msg in messages %}
+                <div class="alert alert-{{ msg.tags }}">{{ msg }}</div>
+            {% endfor %}
+        {% endif %}
         <div class="d-flex justify-content-between align-items-center">
             <h3>สรุปรายเดือน (Monthly Summary)</h3>
             <a href="{% url 'add_transaction' %}" class="btn btn-primary">+ เพิ่มรายการใหม่</a>
@@ -123,7 +128,8 @@
                             <th>วันที่/เวลาสร้าง</th>
                             <th>อ้างอิงทำรายการ</th>
                             <th>ประเภท</th>
-                            <th>แท็ก</th>
+                            <th>สถานะ/แท็ก</th>
+                            <th>คู่ค้า/สินค้า</th>
                             <th>ชื่อรายการ</th>
                             <th>เอกสารชี้แจง</th>
                             <th class="text-end">ยอดก่อน VAT</th>
@@ -146,7 +152,16 @@
                                     <span class="badge bg-success">{{ t.get_transaction_type_display }}</span>
                                 {% endif %}
                             </td>
-                            <td>{% if t.tag %}<span class="badge bg-secondary">{{ t.tag }}</span>{% else %}-{% endif %}</td>
+                            <td>
+                                {% if t.payment_status == 'PAID' %}<span class="badge bg-success">✅ จ่ายแล้ว</span>{% endif %}
+                                {% if t.payment_status == 'PENDING' %}<span class="badge bg-warning text-dark">⏳ รอวางบิล/ค้างชำระ</span>{% endif %}
+                                {% if t.payment_status == 'CANCELLED' %}<span class="badge bg-secondary">❌ ยกเลิก</span>{% endif %}
+                                <br>{% if t.tag %}<span class="badge bg-light text-dark mt-1 border">{{ t.tag }}</span>{% endif %}
+                            </td>
+                            <td>
+                                {% if t.contact %}<div class="text-primary small"><i class="bi bi-person"></i> {{ t.contact.name }}</div>{% endif %}
+                                {% if t.product %}<div class="text-info small"><i class="bi bi-box"></i> {{ t.product.name }} (x{{ t.quantity }})</div>{% endif %}
+                            </td>
                             <td><strong>{{ t.title }}</strong></td>
                             <td>
                                 {% if t.receipt_file %}
@@ -155,7 +170,12 @@
                                     -
                                 {% endif %}
                             </td>
-                            <td class="text-end">{{ t.price|intcomma }}</td>
+                            <td class="text-end">
+                                {% if t.currency != 'THB' %}
+                                    <div class="text-muted small" title="เรท {{ t.exchange_rate }}">{{ t.foreign_price|intcomma }} {{ t.currency }}</div>
+                                {% endif %}
+                                {{ t.price|intcomma }}
+                            </td>
                             <td class="text-end">
                                 {% if t.has_vat %}{{ t.vat_amount|intcomma }}{% else %}-{% endif %}
                             </td>
@@ -163,13 +183,16 @@
                             <td class="text-center">
                                 <div class="d-flex justify-content-center gap-2">
                                     {% if t.transaction_type == 'SELL' or t.transaction_type == 'INCOME' %}
-                                        <a href="{% url 'print_invoice' t.id %}" target="_blank" class="btn btn-sm btn-outline-secondary">🖨️</a>
+                                        <a href="{% url 'print_invoice' t.id %}" target="_blank" class="btn btn-sm btn-outline-secondary" title="พิมพ์ใบเสร็จ">🖨️</a>
                                     {% endif %}
-                                    <a href="{% url 'edit_transaction' t.id %}" class="btn btn-sm btn-outline-primary">✏️ แก้ไข</a>
-                                    <form method="POST" action="{% url 'delete_transaction' t.id %}" onsubmit="return confirm('🚨 ยืนยันการลบรายการ: {{ t.title }}? ยอดรวมรายเดือนจะถูกคำนวณใหม่ทันที');" class="d-inline">
+                                    <a href="{% url 'edit_transaction' t.id %}" class="btn btn-sm btn-outline-primary" title="แก้ไข">✏️</a>
+                                    
+                                    {% if request.user.is_superuser %}
+                                    <form method="POST" action="{% url 'delete_transaction' t.id %}" onsubmit="return confirm('🚨 ยืนยันการลบรายการ: {{ t.title }}? (สต๊อกจะถูกดึงกลับ)');" class="d-inline">
                                         {% csrf_token %}
-                                        <button type="submit" class="btn btn-sm btn-outline-danger">🗑️ ลบ</button>
+                                        <button type="submit" class="btn btn-sm btn-outline-danger" title="ลบ">🗑️</button>
                                     </form>
+                                    {% endif %}
                                 </div>
                             </td>
                         </tr>
