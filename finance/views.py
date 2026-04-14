@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.db.models import Sum
+from django.db.models import Sum, Q
 from django.db.models.functions import TruncMonth
 from .models import Transaction
 from decimal import Decimal
@@ -14,9 +14,13 @@ from django.contrib.auth.decorators import login_required
 def dashboard(request):
     filter_month = request.GET.get('filter_month', 'all')
     category = request.GET.get('category', 'all')
+    search_query = request.GET.get('search_query', '').strip()
     
     transactions = Transaction.objects.all()
     
+    if search_query:
+        transactions = transactions.filter(Q(title__icontains=search_query) | Q(tag__icontains=search_query))
+        
     # Filter by category if requested
     valid_categories = dict(Transaction.TRANSACTION_TYPES).keys()
     if category != 'all' and category in valid_categories:
@@ -77,12 +81,22 @@ def dashboard(request):
     summary_list = list(summary_by_period.values())
     summary_list.sort(key=lambda x: x['period'], reverse=True)
 
+    # Chart data (chronological order)
+    chart_data = list(reversed(summary_list))
+    chart_labels = json.dumps([s['period'].strftime('%Y-%m') for s in chart_data])
+    chart_income = json.dumps([float(s['INCOME'] + s['SELL']) for s in chart_data])
+    chart_expense = json.dumps([float(s['EXPENSE'] + s['BUY']) for s in chart_data])
+
     context = {
         'transactions': transactions[:100],  # show latest 100
         'summary_list': summary_list,
         'available_months': available_months_qs,
         'filter_month': filter_month,
         'category': category,
+        'search_query': search_query,
+        'chart_labels': chart_labels,
+        'chart_income': chart_income,
+        'chart_expense': chart_expense,
     }
     return render(request, 'finance/dashboard.html', context)
 
@@ -92,18 +106,22 @@ def add_transaction(request):
         # Get data
         t_type = request.POST.get('transaction_type')
         title = request.POST.get('title')
+        tag = request.POST.get('tag', '')
         price = request.POST.get('price')
         has_vat = request.POST.get('has_vat') == 'on'
         date_str = request.POST.get('date')
+        receipt_file = request.FILES.get('receipt_file')
         
         # Execute create
         if t_type and title and price and date_str:
             Transaction.objects.create(
                 transaction_type=t_type,
                 title=title,
+                tag=tag,
                 price=Decimal(price),
                 has_vat=has_vat,
-                date=datetime.datetime.strptime(date_str, '%Y-%m-%d').date()
+                date=datetime.datetime.strptime(date_str, '%Y-%m-%d').date(),
+                receipt_file=receipt_file
             )
             return redirect('dashboard')
             
@@ -120,16 +138,21 @@ def edit_transaction(request, transaction_id):
     if request.method == 'POST':
         t_type = request.POST.get('transaction_type')
         title = request.POST.get('title')
+        tag = request.POST.get('tag', '')
         price = request.POST.get('price')
         has_vat = request.POST.get('has_vat') == 'on'
         date_str = request.POST.get('date')
+        receipt_file = request.FILES.get('receipt_file')
         
         if t_type and title and price and date_str:
             transaction.transaction_type = t_type
             transaction.title = title
+            transaction.tag = tag
             transaction.price = Decimal(price)
             transaction.has_vat = has_vat
             transaction.date = datetime.datetime.strptime(date_str, '%Y-%m-%d').date()
+            if receipt_file:
+                transaction.receipt_file = receipt_file
             transaction.save()
             return redirect('dashboard')
             
@@ -144,6 +167,11 @@ def delete_transaction(request, transaction_id):
     if request.method == 'POST':
         transaction.delete()
     return redirect('dashboard')
+
+@login_required
+def print_invoice(request, transaction_id):
+    transaction = get_object_or_404(Transaction, id=transaction_id)
+    return render(request, 'finance/invoice_pdf.html', {'transaction': transaction})
 
 @login_required
 def export_csv(request):

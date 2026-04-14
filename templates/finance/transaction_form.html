@@ -7,7 +7,7 @@
                 {% if transaction %}📝 แก้ไขข้อมูลรายการ{% else %}📝 เพิ่มรายการซื้อ-ขาย / บันทึกการเงินใหม่{% endif %}
             </div>
             <div class="card-body p-4">
-                <form method="POST">
+                <form method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="mb-3">
                         <label class="form-label fw-bold">ประเภทของรายการ</label>
@@ -28,6 +28,19 @@
                     <div class="mb-3">
                         <label class="form-label fw-bold">ชื่อรายการ / ชื่อสินค้า</label>
                         <input type="text" name="title" class="form-control" placeholder="เช่น ขายคอมพิวเตอร์ให้ บจก. ทีคิวเอ็ม" value="{{ transaction.title }}" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">แท็ก / หมวดหมู่ย่อย (ทางเลือก)</label>
+                        <input type="text" name="tag" class="form-control" placeholder="เช่น ค่าโฆษณา, เงินเดือน, วัตถุดิบ..." value="{{ transaction.tag|default_if_none:'' }}">
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">แนบไฟล์สลิป/ใบเสร็จ (ทางเลือก)</label>
+                        <input type="file" name="receipt_file" class="form-control" accept="image/*,.pdf">
+                        {% if transaction.receipt_file %}
+                            <small class="text-muted d-block mt-2">📄 ไฟล์ปัจจุบัน: <a href="{{ transaction.receipt_file.url }}" target="_blank">ดูไฟล์เดิม</a> (หากอัปโหลดใหม่จะแทนที่อันเก่า)</small>
+                        {% endif %}
                     </div>
 
                     <div class="mb-4">

@@ -15,6 +15,8 @@ class Transaction(models.Model):
     has_vat = models.BooleanField(default=False, verbose_name="คิด VAT 7%")
     vat_amount = models.DecimalField(max_digits=12, decimal_places=2, default=0, verbose_name="ยอด VAT")
     total_price = models.DecimalField(max_digits=12, decimal_places=2, default=0, verbose_name="ยอดสุทธิ (รวม VAT)")
+    tag = models.CharField(max_length=100, blank=True, null=True, verbose_name="แท็ก/หมวดหมู่ย่อย")
+    receipt_file = models.FileField(upload_to='receipts/', blank=True, null=True, verbose_name="ไฟล์สลิป/ใบเสร็จ")
     date = models.DateField(verbose_name="วันที่ทำรายการ")
     created_at = models.DateTimeField(auto_now_add=True)
 

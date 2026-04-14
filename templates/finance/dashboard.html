@@ -14,7 +14,11 @@
     <div class="col-12">
         <form method="GET" class="card p-3 shadow-sm border-0">
             <div class="row align-items-end">
-                <div class="col-md-4 mb-3 mb-md-0">
+                <div class="col-md-3 mb-3 mb-md-0">
+                    <label class="form-label fw-bold">🔎 ค้นหารายการ / แท็ก</label>
+                    <input type="text" name="search_query" class="form-control" placeholder="พิมพ์ชื่อ, แท็ก..." value="{{ search_query }}">
+                </div>
+                <div class="col-md-3 mb-3 mb-md-0">
                     <label class="form-label fw-bold">📅 เลือกเดือน/ปีที่ต้องการ</label>
                     <select name="filter_month" class="form-select">
                         <option value="all" {% if filter_month == 'all' %}selected{% endif %}>แสดงข้อมูลตลอดเวลา (All Time)</option>
@@ -23,7 +27,7 @@
                         {% endfor %}
                     </select>
                 </div>
-                <div class="col-md-5 mb-3 mb-md-0">
+                <div class="col-md-4 mb-3 mb-md-0">
                     <label class="form-label fw-bold">🏷️ หมวดหมู่รายการ</label>
                     <select name="category" class="form-select">
                         <option value="all" {% if category == 'all' %}selected{% endif %}>แสดงทั้งหมด (All)</option>
@@ -33,11 +37,19 @@
                         <option value="EXPENSE" {% if category == 'EXPENSE' %}selected{% endif %}>รายจ่ายอื่นๆ (EXPENSE) อย่างเดียว</option>
                     </select>
                 </div>
-                <div class="col-md-3 text-end">
+                <div class="col-md-2 text-end">
                     <button type="submit" class="btn btn-dark w-100">🔍 กรองข้อมูล</button>
                 </div>
             </div>
         </form>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card p-3">
+            <canvas id="financeChart" height="80"></canvas>
+        </div>
     </div>
 </div>
 
@@ -111,7 +123,9 @@
                             <th>วันที่/เวลาสร้าง</th>
                             <th>อ้างอิงทำรายการ</th>
                             <th>ประเภท</th>
+                            <th>แท็ก</th>
                             <th>ชื่อรายการ</th>
+                            <th>เอกสารชี้แจง</th>
                             <th class="text-end">ยอดก่อน VAT</th>
                             <th class="text-end">VAT (7%)</th>
                             <th class="text-end">ยอดสุทธิ (Net)</th>
@@ -132,7 +146,15 @@
                                     <span class="badge bg-success">{{ t.get_transaction_type_display }}</span>
                                 {% endif %}
                             </td>
+                            <td>{% if t.tag %}<span class="badge bg-secondary">{{ t.tag }}</span>{% else %}-{% endif %}</td>
                             <td><strong>{{ t.title }}</strong></td>
+                            <td>
+                                {% if t.receipt_file %}
+                                    <a href="{{ t.receipt_file.url }}" target="_blank" class="btn btn-sm btn-outline-info p-1">📄 ดูเอกสาร</a>
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
                             <td class="text-end">{{ t.price|intcomma }}</td>
                             <td class="text-end">
                                 {% if t.has_vat %}{{ t.vat_amount|intcomma }}{% else %}-{% endif %}
@@ -140,6 +162,9 @@
                             <td class="text-end fw-bold">{{ t.total_price|intcomma }} ฿</td>
                             <td class="text-center">
                                 <div class="d-flex justify-content-center gap-2">
+                                    {% if t.transaction_type == 'SELL' or t.transaction_type == 'INCOME' %}
+                                        <a href="{% url 'print_invoice' t.id %}" target="_blank" class="btn btn-sm btn-outline-secondary">🖨️</a>
+                                    {% endif %}
                                     <a href="{% url 'edit_transaction' t.id %}" class="btn btn-sm btn-outline-primary">✏️ แก้ไข</a>
                                     <form method="POST" action="{% url 'delete_transaction' t.id %}" onsubmit="return confirm('🚨 ยืนยันการลบรายการ: {{ t.title }}? ยอดรวมรายเดือนจะถูกคำนวณใหม่ทันที');" class="d-inline">
                                         {% csrf_token %}
@@ -155,4 +180,44 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const ctx = document.getElementById('financeChart');
+        if (ctx) {
+            const labels = {{ chart_labels|safe }};
+            const incomeData = {{ chart_income|safe }};
+            const expenseData = {{ chart_expense|safe }};
+            
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'รายรับ (Income+Sell)',
+                            data: incomeData,
+                            backgroundColor: 'rgba(16, 185, 129, 0.7)',
+                            borderColor: 'rgba(16, 185, 129, 1)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'รายจ่าย (Expense+Buy)',
+                            data: expenseData,
+                            backgroundColor: 'rgba(239, 68, 68, 0.7)',
+                            borderColor: 'rgba(239, 68, 68, 1)',
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: { beginAtZero: true }
+                    }
+                }
+            });
+        }
+    });
+</script>
 {% endblock %}
